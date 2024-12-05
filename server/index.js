@@ -1,0 +1,146 @@
+// const express=require('express');
+// const cors=require('cors');
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
+// const mongoose=require('mongoose');
+// const Plan=require('./model/Plan.model.js');
+// require("dotenv").config();
+
+// const app=express();
+// app.use(cors());
+// app.use(express.json());
+// const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+// mongoose.connect(process.env.MONGODB_URL)
+//     .then(() => console.log("Connected to MongoDB"))
+//     .catch((err) => console.error("MongoDB connection error:", err.message));
+
+   
+// app.post('/gemini',async(req,res)=>{
+//     const location=req.body.query;
+//     const days=req.body.days;
+//     const amount=req.body.budget; 
+//     const people=req.body.people;
+//     const prompt =  `Generate Travel Plan for Location: ${location}, for ${days} Days for ${people} with a ${amount} budget. Suggest an itinerary in JSON format with the following fields:
+//     - tripName
+//     - duration
+//     - budget
+//     - bestTimetoVisit
+//     - days (each day containing day number, theme, and plan with placeName, placeDetails, placeImageUrl, geoCoordinates, ticketPricing, travelTime)`;
+
+//     try{
+//         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+//     console.log(model);
+//             if (!model) {
+//                 console.error("Model initialization failed.");
+//                 return res.status(500).json({ error: "Model not available." });
+//             }
+    
+//             const result = await model.generateContent(prompt);
+    
+//             if (!result || !result.response) {
+//                 console.error("Invalid response from model.");
+//                 return res.status(500).json({ error: "Error generating" });
+//             }
+    
+            
+//             const tripData= result.response.text();
+            
+//              res.status(200).json(tripData);          
+//     }
+//     catch(e){
+//         console.log("message from server",e);
+//     }
+// })
+// // app.get("/",(req,res)=>{
+// //     res.send("HI")
+// //     }
+// // )
+// app.listen(5000,()=>{
+//     console.log('server is running');
+// })
+
+
+
+const express = require('express');
+const cors = require('cors');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const mongoose = require('mongoose');
+const Plan = require('./model/Plan.model.js');
+require("dotenv").config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+
+const genAI = new GoogleGenerativeAI( process.env.API_KEY );
+let model;
+
+(async () => {
+    try {
+        
+        model = await genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        console.log("Model initialized:", model);
+    } catch (err) {
+        console.error("Error initializing Generative Model:", err.message);
+    }
+})();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URL)
+    .then(() => console.log("Connected to MongoDB"))
+    .catch((err) => console.error("MongoDB connection error:", err.message));
+
+// Route to handle travel plan generation
+app.post('/gemini', async (req, res) => {
+    const { query: location, days, budget: amount, people } = req.body;
+    const prompt = `
+        Generate Travel Plan for Location: ${location}, for ${days} Days for ${people} with a ${amount} budget. 
+        Suggest an itinerary in JSON format with the following fields:
+        - tripName
+        - duration
+        - budget
+        - bestTimetoVisit
+        - days (each day containing day number, theme, and plan with placeName, placeDetails, placeImageUrl, geoCoordinates, ticketPricing, travelTime)
+    `;
+
+    try {
+        if (!model) {
+            console.error("Model is not initialized.");
+            return res.status(500).json({ error: "Model not available. Please try again later." });
+        }
+
+        const result = await model.generateContent(prompt);
+      
+
+        if (!result || !result.response) {
+            console.error("Invalid response from model.");
+            return res.status(500).json({ error: "Failed to generate travel plan." });
+        }
+        // let tripData;
+        // try {
+        //     tripData = JSON.parse(result.response.text()); // Parse JSON string
+        // } catch (parseError) {
+        //     console.error("Error parsing AI response:", parseError.message);
+        //     return res.status(500).json({ error: "AI response is not valid JSON." });
+        // }
+
+        const tripData=result.response.text();
+  
+        // const newTrip = new Plan(tripData);
+        // const savedTrip = await newTrip.save();
+        // console.log("Trip data saved:", tripData);
+
+        res.status(200).json(tripData );
+    } catch (err) {
+        console.error("Error in /gemini route:", err.message);
+        res.status(500).json({ error: "Internal server error." });
+    }
+});
+
+// Start the server
+app.listen(5000, () => {
+    console.log('Server is running on port 5000');
+});
+
+
+
