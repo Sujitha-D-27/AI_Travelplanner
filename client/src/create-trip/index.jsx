@@ -19,7 +19,7 @@ const formSteps = [
 ];
 
 export default function CreateTrip() {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     destination: '',
@@ -45,7 +45,7 @@ const navigate=useNavigate();
         {
           params: {
             input,
-            key: 'AlzaSyaOdDAgA6ELDAe3IPrmPTpnBI-6m-DMb3r', 
+            key: 'AlzaSyNnFX7zjq6neBmCyb3kIPucGEKjwFwwNUi', 
           },
         }
       );
@@ -78,6 +78,10 @@ const navigate=useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    if (!formData.destination || !formData.days || !formData.budget || !formData.travelerType) {
+      setError('Please fill in all fields before generating the plan.');
+      return; 
+    }
     if(loading)return;
     setLoading(true);
     try {
@@ -93,8 +97,14 @@ const navigate=useNavigate();
       const response = await axios.post('http://localhost:5000/gemini', payload);
 
       console.log('API Response:', response.data);
+      localStorage.clear();
+      localStorage.setItem("TripData", response.data);
+      // console.log('Stored TripData in localStorage:', localStorage.getItem("TripData"));
+
+    
       
-      dispatch(setTravelPlan(response.data));
+      
+      // dispatch(setTravelPlan(response.data));
       navigate('/view');
       setError(''); // Clear any previous errors
     } catch (error) {
@@ -163,9 +173,9 @@ const navigate=useNavigate();
             <div className="flex items-center space-x-4">
               <Slider
                 id="days"
-                min={1}
-                max={10} // Set the range from 1 to 10
-                step={1} // Increment by 1
+                min={0}
+                max={10} 
+                step={1} 
                 value={[formData.days || 1]}
                 onValueChange={(value) => updateFormData('days', value[0])}
                 className="flex-grow"

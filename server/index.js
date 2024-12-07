@@ -94,14 +94,30 @@ mongoose.connect(process.env.MONGODB_URL)
 app.post('/gemini', async (req, res) => {
     const { query: location, days, budget: amount, people } = req.body;
     const prompt = `
-        Generate Travel Plan for Location: ${location}, for ${days} Days for ${people} with a ${amount} budget. 
-        Suggest an itinerary in JSON format with the following fields:
-        - tripName
-        - duration
-        - budget
-        - bestTimetoVisit
-        - days (each day containing day number, theme, and plan with placeName, placeDetails, placeImageUrl, geoCoordinates, ticketPricing, travelTime)
-    `;
+        
+Generate a travel plan for the following details:
+- Location: ${location}
+- Duration: ${days} Days
+- Number of People: ${people}
+- Budget: ${amount}
+
+The itinerary should be provided in JSON format and include the following fields:
+1. tripName
+2. duration
+3. budget
+4. bestTimetoVisit
+5. days: Each day should include:
+   - dayNumber
+   - theme
+   - plan: A list of places, where each place contains:
+     - placeName
+     - placeDetails
+     - placeImageUrl
+     - geoCoordinates
+     - ticketPricing
+     - travelTime
+Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json.
+`;
 
     try {
         if (!model) {
@@ -116,21 +132,15 @@ app.post('/gemini', async (req, res) => {
             console.error("Invalid response from model.");
             return res.status(500).json({ error: "Failed to generate travel plan." });
         }
-        // let tripData;
-        // try {
-        //     tripData = JSON.parse(result.response.text()); // Parse JSON string
-        // } catch (parseError) {
-        //     console.error("Error parsing AI response:", parseError.message);
-        //     return res.status(500).json({ error: "AI response is not valid JSON." });
-        // }
+       
 
         const tripData=result.response.text();
-  
+        console.log(tripData)
         // const newTrip = new Plan(tripData);
         // const savedTrip = await newTrip.save();
         // console.log("Trip data saved:", tripData);
 
-        res.status(200).json(tripData );
+        res.status(200).json(tripData);
     } catch (err) {
         console.error("Error in /gemini route:", err.message);
         res.status(500).json({ error: "Internal server error." });
