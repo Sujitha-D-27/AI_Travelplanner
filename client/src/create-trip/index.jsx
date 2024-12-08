@@ -12,6 +12,7 @@ import { setTravelPlan } from '@/store/Travelplanslice';
 import { useNavigate } from 'react-router-dom';
 
 const formSteps = [
+  
   { id: 'destination', title: 'Destination', icon: MapPin },
   { id: 'days', title: 'Duration', icon: Calendar },
   { id: 'budget', title: 'Budget', icon: Wallet },
@@ -22,17 +23,21 @@ export default function CreateTrip() {
   // const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
+    
     destination: '',
     days: undefined, 
     budget: '', 
     travelerType: '', 
   });
+ 
   const [query, setQuery] = useState(''); // User input for destination
+ 
   const [suggestions, setSuggestions] = useState([]); // Store suggestions
   const[loading,setLoading]=useState(false);
   const [error, setError] = useState('');
 const navigate=useNavigate();
-  // Fetch suggestions from GoMaps API
+  
+  
   const fetchSuggestions = async (input) => {
     if (!input) {
       setSuggestions([]);
@@ -55,6 +60,7 @@ const navigate=useNavigate();
       setSuggestions([]);
     }
   };
+ 
 
   //  form's next button click
   const handleNext = () => {
@@ -133,6 +139,7 @@ const navigate=useNavigate();
   // Render the current step of the form
   const renderStep = () => {
     switch (formSteps[currentStep].id) {
+     
       case 'destination':
         return (
           <div className="space-y-4">

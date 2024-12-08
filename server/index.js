@@ -65,6 +65,7 @@ const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const mongoose = require('mongoose');
 const Plan = require('./model/Plan.model.js');
+const User=require('./model/User.model.js');
 require("dotenv").config();
 
 const app = express();
@@ -135,7 +136,7 @@ Ensure the response includes the JSON block properly formatted with necessary da
        
 
         const tripData=result.response.text();
-        console.log(tripData)
+        // console.log(tripData)
         // const newTrip = new Plan(tripData);
         // const savedTrip = await newTrip.save();
         // console.log("Trip data saved:", tripData);
@@ -146,6 +147,49 @@ Ensure the response includes the JSON block properly formatted with necessary da
         res.status(500).json({ error: "Internal server error." });
     }
 });
+// app.post('/user',async(req,res)=>{
+//    const {username,email,password, isgoogleuser =false}=req.body;
+//    try{
+//     const existingUser = await User.findOne({ email });
+//     if (existingUser) {
+//       return res.status(409).json({ message: 'User already exists' });
+//     }
+//     const userdata=new User({username,email,password});
+//     await userdata.save();
+//     res.status(201).json({ message: 'User registered successfully' });
+//    }
+//    catch(e){
+//     console.log("unsuccessful registration:",e);
+//     res.status(500).json({ message: 'User registered unsuccessfully' });
+//    }
+   
+
+// })
+
+app.post('/user', async (req, res) => {
+    const { username, email, password, isgoogleuser = false } = req.body;
+console.log(username);
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
+   
+ 
+        const userdata = new User({ username, email, password, isgoogleuser });
+        await userdata.save();
+
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (err) {
+        console.error("Error during user registration:", err.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // Start the server
 app.listen(5000, () => {

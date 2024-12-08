@@ -38,8 +38,8 @@ export default function Hero() {
                   Plan your perfect trip in minutes. Tailored itineraries for any destination, budget, and travel style.
                 </p>
                 <div className="mt-10">
-                  <Button asChild size="lg" className="px-8 py-3 text-lg font-semibold">
-                    <a href="#get-started">Start Planning</a>
+                  <Button>
+                    Here is your demo
                   </Button>
                 </div>
               </div>
