@@ -136,18 +136,25 @@ Ensure the response includes the JSON block properly formatted with necessary da
        
 
         const tripData=result.response.text();
-        // console.log(tripData)
-        // const parse=json.Parse(tripData);
-        // const newTrip = new Plan(tripData);
-        // const savedTrip = await newTrip.save();
-        // console.log("Trip data saved:", tripData);
-
+        console.log(tripData)
         res.status(200).json(tripData);
+        const parse=JSON.parse(tripData);
+        const newTrip = new Plan(parse);
+        const savedTrip = await newTrip.save();
+        console.log("Trip data saved:", savedTrip);
     } catch (err) {
         console.error("Error in /gemini route:", err.message);
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
+
+
+
+
+
+
+
 // app.post('/user',async(req,res)=>{
 //    const {username,email,password, isgoogleuser =false}=req.body;
 //    try{
