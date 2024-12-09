@@ -107,10 +107,10 @@ The itinerary should be provided in JSON format and include the following fields
 2. duration
 3. budget
 4. bestTimetoVisit
-5. days: Each day should include:
+5. days: Each day should include :
    - dayNumber
    - theme
-   - plan: A list of places, where each place contains:
+   - plan: A list of 4 places, where each place contains:
      - placeName
      - placeDetails
      - placeImageUrl
@@ -137,6 +137,7 @@ Ensure the response includes the JSON block properly formatted with necessary da
 
         const tripData=result.response.text();
         // console.log(tripData)
+        // const parse=json.Parse(tripData);
         // const newTrip = new Plan(tripData);
         // const savedTrip = await newTrip.save();
         // console.log("Trip data saved:", tripData);
