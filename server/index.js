@@ -114,6 +114,8 @@ The itinerary should be provided in JSON format and include the following fields
      - placeName
      - placeDetails
      - placeImageUrl
+     - description (100 words)
+     -address(detailed address for placename)
      - geoCoordinates
      - ticketPricing
      - travelTime

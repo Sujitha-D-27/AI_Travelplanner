@@ -14,6 +14,7 @@ const tripSchema = new mongoose.Schema({
             placeName: String,
             placeDetails: String,
             placeImageUrl: String,
+            description:String,
             geoCoordinates: String,
             ticketPricing: String,
             travelTime: String,
