@@ -87,34 +87,25 @@ function View() {
     const lng = parseFloat(match[3]) * (match[4] === "W" ? -1 : 1);
     return { lat, lng };
   };
+  
 
-  const savetrip = () => {
-    // Use a dummy email for testing; replace with actual logic if needed
+  const addtrip = async(place)=>{
+
     const email = "suji@gmail.com";
-  
-    // Get and stringify TripData from localStorage
-    const tripData = localStorage.getItem("TripData");
-    if (!tripData) {
-      console.error("TripData not found in localStorage");
-      return;
-    }
-  
-    try {
-      const cart = JSON.parse(tripData); // Parse the data correctly
-      axios
-        .post("http://localhost:5000/wishlist/add", {
-          email: email,
-          cart: cart, // Pass parsed cart data
+  try {
+      
+    const response= await axios.post("http://localhost:5000/wishlist/add", {
+          email,
+          carttrip: [place], 
         })
-        .then((response) => {
-          console.log("Success:", response.data);
-        })
-        .catch((error) => {
+        console.log(response.data.message);
+        
+      }
+      
+  catch(error){
           console.error("Error saving trip:", error.response?.data || error.message);
-        });
-    } catch (error) {
-      console.error("Error parsing TripData:", error);
-    }
+        };
+    
   };
   
 
@@ -231,7 +222,7 @@ function View() {
                      <Clock className="w-4 h-4 mr-1" />
                      {place.travelTime}
                    </Badge>
-                   <Button>Add to my trip</Button>
+                   <Button onClick={()=>addtrip(place)}>Add to my trip</Button>
                       </div>
                     </div>
                   </DialogContent>
@@ -242,7 +233,7 @@ function View() {
          
         </div>
       ))}
-       <Button className="justify-center ml-96 w-44 bg-red-400" onClick={savetrip}>Add to my trip</Button>
+      
     </div>
   );
 }

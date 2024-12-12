@@ -212,11 +212,11 @@ function Signup() {
         isgoogleuser: true,
       });
   
-      // Check the response message
+     
       if (response.data.message === 'User already exists') {
-        // If user already exists, set success message and navigate to the next page
-        const useremail=localStorage.setItem("Email",email);
 
+        const useremail=localStorage.setItem("Email",email);
+          
         setSuccess(`Welcome back, ${user.displayName}!`);
         setTimeout(() => {
           navigate('/create-trip');

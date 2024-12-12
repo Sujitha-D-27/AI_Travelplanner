@@ -92,9 +92,8 @@ Ensure the response includes the JSON block properly formatted with necessary da
 
 
 app.post('/wishlist/add', async (req, res) => {
-  const { email, carttrip } = req.body;
-
-  try {
+  const  {email ,carttrip}= req.body;
+ try {
    
     let wishlist = await Wishlist.findOne({ email });
     if (!wishlist) {
