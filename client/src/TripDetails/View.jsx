@@ -88,6 +88,36 @@ function View() {
     return { lat, lng };
   };
 
+  const savetrip = () => {
+    // Use a dummy email for testing; replace with actual logic if needed
+    const email = "suji@gmail.com";
+  
+    // Get and stringify TripData from localStorage
+    const tripData = localStorage.getItem("TripData");
+    if (!tripData) {
+      console.error("TripData not found in localStorage");
+      return;
+    }
+  
+    try {
+      const cart = JSON.parse(tripData); // Parse the data correctly
+      axios
+        .post("http://localhost:5000/wishlist/add", {
+          email: email,
+          cart: cart, // Pass parsed cart data
+        })
+        .then((response) => {
+          console.log("Success:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error saving trip:", error.response?.data || error.message);
+        });
+    } catch (error) {
+      console.error("Error parsing TripData:", error);
+    }
+  };
+  
+
   useEffect(() => {
     try {
       const savedData = JSON.parse(localStorage.getItem("TripData"));
@@ -144,7 +174,7 @@ function View() {
                     <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-xl">
                       <div className="relative h-64">
                         <img
-                          src={placeImages[place.placeName] || "https://via.placeholder.com/600x400?text=Loading..."}
+                          src={placeImages[place.placeName]||"https://via.placeholder.com/600x400?text=Loading..."}
                           alt={place.placeName}
                           className="w-full h-full object-cover"
                         />
@@ -192,9 +222,7 @@ function View() {
                       )}
                       <div className="flex flex-wrap items-center gap-4 mb-4">
                         <p className="text-gray-700 mb-4">{place.description}</p>
-                        {/* <p>
-                          <strong>Ticket Pricing:</strong> {place.ticketPricing}
-                        </p> */}
+                       
                         <Badge variant="secondary" className="flex items-center">
                     <Ticket className="w-4 h-4 mr-1" />
                      {place.ticketPricing}
@@ -203,6 +231,7 @@ function View() {
                      <Clock className="w-4 h-4 mr-1" />
                      {place.travelTime}
                    </Badge>
+                   <Button>Add to my trip</Button>
                       </div>
                     </div>
                   </DialogContent>
@@ -210,8 +239,10 @@ function View() {
               );
             })}
           </div>
+         
         </div>
       ))}
+       <Button className="justify-center ml-96 w-44 bg-red-400" onClick={savetrip}>Add to my trip</Button>
     </div>
   );
 }

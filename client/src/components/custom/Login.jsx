@@ -32,13 +32,15 @@ function Login() {
     
     if (!email || !password) {
       setError('Please fill in both email and password');
-    } else {
+    } 
+    
+    try {
+      const response = await axios.post('http://localhost:5000/loginvalid', {email, password });
+      setSuccess(response.data.message);
       setError('');
-      setSuccess('Login successful!');
-
-      setTimeout(() => {
-        navigate('/create-trip'); 
-      }, 2000);
+      setTimeout(() => navigate('/signup'), 2000);
+    } catch (err) {
+      setError('Account does not exist,please Signup');
     }
   };
 

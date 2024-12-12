@@ -1,71 +1,10 @@
-// const express=require('express');
-// const cors=require('cors');
-// const { GoogleGenerativeAI } = require("@google/generative-ai");
-// const mongoose=require('mongoose');
-// const Plan=require('./model/Plan.model.js');
-// require("dotenv").config();
-
-// const app=express();
-// app.use(cors());
-// app.use(express.json());
-// const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-// mongoose.connect(process.env.MONGODB_URL)
-//     .then(() => console.log("Connected to MongoDB"))
-//     .catch((err) => console.error("MongoDB connection error:", err.message));
-
-   
-// app.post('/gemini',async(req,res)=>{
-//     const location=req.body.query;
-//     const days=req.body.days;
-//     const amount=req.body.budget; 
-//     const people=req.body.people;
-//     const prompt =  `Generate Travel Plan for Location: ${location}, for ${days} Days for ${people} with a ${amount} budget. Suggest an itinerary in JSON format with the following fields:
-//     - tripName
-//     - duration
-//     - budget
-//     - bestTimetoVisit
-//     - days (each day containing day number, theme, and plan with placeName, placeDetails, placeImageUrl, geoCoordinates, ticketPricing, travelTime)`;
-
-//     try{
-//         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-//     console.log(model);
-//             if (!model) {
-//                 console.error("Model initialization failed.");
-//                 return res.status(500).json({ error: "Model not available." });
-//             }
-    
-//             const result = await model.generateContent(prompt);
-    
-//             if (!result || !result.response) {
-//                 console.error("Invalid response from model.");
-//                 return res.status(500).json({ error: "Error generating" });
-//             }
-    
-            
-//             const tripData= result.response.text();
-            
-//              res.status(200).json(tripData);          
-//     }
-//     catch(e){
-//         console.log("message from server",e);
-//     }
-// })
-// // app.get("/",(req,res)=>{
-// //     res.send("HI")
-// //     }
-// // )
-// app.listen(5000,()=>{
-//     console.log('server is running');
-// })
-
-
-
 const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const mongoose = require('mongoose');
 const Plan = require('./model/Plan.model.js');
 const User=require('./model/User.model.js');
+const Wishlist=require('./model/Wishlist.model.js');
 require("dotenv").config();
 
 const app = express();
@@ -86,12 +25,12 @@ let model;
     }
 })();
 
-// Connect to MongoDB
+
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB connection error:", err.message));
 
-// Route to handle travel plan generation
+
 app.post('/gemini', async (req, res) => {
     const { query: location, days, budget: amount, people } = req.body;
     const prompt = `
@@ -116,7 +55,7 @@ The itinerary should be provided in JSON format and include the following fields
      - placeImageUrl
      - description (100 words)
      -address(detailed address for placename)
-     - geoCoordinates
+     - geoCoordinates(lat-N/S , Lon-E/W)
      - ticketPricing
      - travelTime
 Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json.
@@ -152,29 +91,63 @@ Ensure the response includes the JSON block properly formatted with necessary da
 
 
 
+app.post('/wishlist/add', async (req, res) => {
+  const { email, carttrip } = req.body;
 
-
-
-
-
-// app.post('/user',async(req,res)=>{
-//    const {username,email,password, isgoogleuser =false}=req.body;
-//    try{
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(409).json({ message: 'User already exists' });
-//     }
-//     const userdata=new User({username,email,password});
-//     await userdata.save();
-//     res.status(201).json({ message: 'User registered successfully' });
-//    }
-//    catch(e){
-//     console.log("unsuccessful registration:",e);
-//     res.status(500).json({ message: 'User registered unsuccessfully' });
-//    }
+  try {
    
+    let wishlist = await Wishlist.findOne({ email });
+    if (!wishlist) {
+    const newWishlist = new Wishlist({
+      email,
+      carttrip,
+    });
+    
+    const save=await newWishlist.save();
+    console.log(save);
+    return res.status(200).json({ message: 'Item added to wishlist', wishlist: newWishlist });
+  }
+  const alreadyExists = carttrip.some((newItem) => 
+      wishlist.carttrip.some((item) => item.placeName === newItem.placeName)
+    );
 
-// })
+    if (alreadyExists) {
+      return res.status(400).json({ message: 'Item already in wishlist' });
+    }
+  wishlist.carttrip.push(...carttrip);
+  await wishlist.save();  
+  return res.status(200).json({ message: 'Item added or u can call updated' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+ 
+  app.get('/wishlist/:email', async (req, res) => {
+    const { email } = req.params;
+  
+    try {
+      const wishlist = await Wishlist.findOne({ email });
+  
+      if (!wishlist) {
+        return res.status(404).json({ message: 'No wishlist found for this user' });
+      }
+  
+      res.status(200).json({ wishlist: wishlist.carttrip });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+
+
+
+
+
+
 
 app.post('/user', async (req, res) => {
     const { username, email, password, isgoogleuser = false } = req.body;
@@ -199,7 +172,22 @@ console.log(username);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
+app.post('/loginvalid',async(req,res)=>{
+  const{email,password}=req.body;
+  if(!email || !password){
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+  try {
+    const Existinguser = await User.findOne({ email });
+    if (!Existinguser) {
+        return res.status(409).json({ message: 'Account does not exist' });
+    }
+    res.status(201).json({ message: 'User login successfully' });
+  }
+  catch(err){
+    res.status(500).json({message:'Server error'});
+  }
+})
 
 // Start the server
 app.listen(5000, () => {

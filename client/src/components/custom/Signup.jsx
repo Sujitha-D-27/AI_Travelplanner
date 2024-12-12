@@ -166,7 +166,7 @@ function Signup() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-
+ 
   // const handleGoogleSignUp = async () => {
   //   try {
   //     const result = await signInWithPopup(auth, provider);
@@ -215,12 +215,16 @@ function Signup() {
       // Check the response message
       if (response.data.message === 'User already exists') {
         // If user already exists, set success message and navigate to the next page
+        const useremail=localStorage.setItem("Email",email);
+
         setSuccess(`Welcome back, ${user.displayName}!`);
         setTimeout(() => {
           navigate('/create-trip');
         }, 2000);
       } else {
         // New user, proceed to registration
+        const useremail=localStorage.setItem("Email",email);
+
         setSuccess(`Welcome, ${user.displayName}!`);
         setTimeout(() => {
           navigate('/create-trip');
@@ -229,6 +233,8 @@ function Signup() {
     } catch (error) {
       // Check if the error is due to the user already existing
       if (error.response?.data?.message === 'User already exists') {
+        const useremail=localStorage.setItem("Email",email);
+
         setSuccess('user already exists');
         // User already exists, so just a success message
         setTimeout(() => {
