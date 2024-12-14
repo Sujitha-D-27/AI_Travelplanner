@@ -179,11 +179,15 @@ app.post('/loginvalid',async(req,res)=>{
   try {
     const Existinguser = await User.findOne({ email });
     if (!Existinguser) {
-        return res.status(409).json({ message: 'Account does not exist' });
+        return res.status(404).json({ message: 'Account does not exist' });
     }
-    res.status(201).json({ message: 'User login successfully' });
+    if (password !== Existinguser.password) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+    res.status(200).json(Existinguser);
   }
   catch(err){
+    console.log("server error",err);
     res.status(500).json({message:'Server error'});
   }
 })

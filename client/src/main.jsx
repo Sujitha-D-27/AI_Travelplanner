@@ -11,9 +11,10 @@ import Headers from './components/custom/Header'
 
 import Login from './components/custom/Login'
 import Signup from './components/custom/Signup'
-import { Provider } from 'react-redux'
+
 import View from './TripDetails/View'
-import store from './store/Store'
+
+import Profile from './components/custom/Profile'
 
 const router=createBrowserRouter([{
 path:'/',
@@ -34,17 +35,21 @@ element:<App/>
 {
   path:'/view',
   element:<View />
+},
+{
+  path:'/profile',
+  element:<Profile/>
 }
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store}>
+    
     <RouterProvider router={router}>
    
     <Headers/>
      <Toaster /> 
      
     </RouterProvider>
-    </Provider>
+    
   </StrictMode>
 )

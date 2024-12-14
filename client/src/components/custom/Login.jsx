@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import plane from '/plane.gif';
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,13 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      const useremail=user.email
+     
+      localStorage.setItem("Email",useremail);
+      console.log(user.email);
       setSuccess(`Welcome, ${user.displayName}!`);
       setTimeout(() => {
-        navigate('/create-trip'); 
+        navigate('/'); 
       }, 2000);
     } catch (error) {
       setError('Google sign-in failed, please try again.');
@@ -29,18 +34,29 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
+   
     if (!email || !password) {
       setError('Please fill in both email and password');
     } 
     
     try {
-      const response = await axios.post('http://localhost:5000/loginvalid', {email, password });
+     
+      localStorage.setItem("Email",email);
+      console.log(email);
+      const response = await axios.post('http://localhost:5000/loginvalid', {email, password});
+      console.log(response.data);
       setSuccess(response.data.message);
       setError('');
-      setTimeout(() => navigate('/signup'), 2000);
+      setTimeout(() => navigate('/'), 2000);
     } catch (err) {
-      setError('Account does not exist,please Signup');
+      if (err.response && err.response.status === 404) {
+        setError('Account does not exist, please signup');
+      } else if (err.response && err.response.status === 401) {
+        setError('Invalid email or password');
+      } else {
+        setError('Server error, please try again later');
+      }
+     
     }
   };
 

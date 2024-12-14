@@ -50,7 +50,7 @@ const navigate=useNavigate();
         {
           params: {
             input,
-            key: 'AlzaSyNnFX7zjq6neBmCyb3kIPucGEKjwFwwNUi', 
+            key: 'AlzaSy2hGwQKZv-66Sfw_vCdf4h_tTZAjr-z3LP', 
           },
         }
       );
@@ -103,8 +103,9 @@ const navigate=useNavigate();
       const response = await axios.post('http://localhost:5000/gemini', payload);
 
       console.log('API Response:', response.data);
-      localStorage.clear();
+      
       localStorage.setItem("TripData", response.data);
+      
       // console.log('Stored TripData in localStorage:', localStorage.getItem("TripData"));
 
     

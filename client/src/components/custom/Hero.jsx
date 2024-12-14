@@ -4,7 +4,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Calendar, DollarSign, Users, Plane, Check } from 'lucide-react'
 import world from '/world.gif';
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 export default function Hero() {
+  const [login,setLogin]=useState(false);
+  useEffect(()=>{
+    const email=localStorage.getItem("Email");
+    setLogin(!email);
+  },[])
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
       <header className="bg-white shadow-sm">
@@ -14,20 +20,27 @@ export default function Hero() {
             <span className="ml-2 text-2xl font-bold text-gray-900">BUDGET QUEST</span>
           </div>
           <div className="flex items-center space-x-4">
+          <a href="#home" className="text-gray-500 hover:text-gray-900">Home</a>
             <a href="#features" className="text-gray-500 hover:text-gray-900">Features</a>
             <a href="#how-it-works" className="text-gray-500 hover:text-gray-900">How It Works</a>
-            <Link to={'/login'}>
+            {login?
+            (<Link to={'/login'}>
             <Button>
               Signup/Login
             </Button>
-            </Link>
+            </Link>)
+            :
+           ( <Link to={'/profile'}>
+              <Button>Profile</Button>
+            </Link>)
+}
           </div>
         </nav>
       </header>
 
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-purple-800 to-blue-700 text-white">
+     
+        <section id="home" className="bg-gradient-to-r from-purple-800 to-blue-700 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
             <div className="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
               <div>
@@ -56,7 +69,7 @@ export default function Hero() {
           </div>
         </section>
 
-        {/* Features Section */}
+      
         <section id="features" className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-extrabold text-center text-gray-900">
@@ -117,7 +130,7 @@ export default function Hero() {
           </div>
         </section>
 
-        {/* CTA Section */}
+      
         <section id="get-started" className="bg-indigo-700 text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
             <h2 className="text-3xl font-extrabold sm:text-4xl">
@@ -128,9 +141,11 @@ export default function Hero() {
             </p>
             <div className="mt-8 flex justify-center">
               <div className="inline-flex rounded-md shadow">
+                <Link to = {'/create-trip'}>
                 <Button size="lg" className="px-8 py-3 text-lg font-semibold bg-white text-indigo-600 hover:bg-gray-50">
                   Get Started for Free
                 </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -143,67 +158,12 @@ export default function Hero() {
 
       <footer className="bg-gray-800 text-white">
   <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
     
-      <div>
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Company</h3>
-        <ul className="mt-4 space-y-4">
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">About Us</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Careers</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Contact Us</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Our Team</a></li>
-        </ul>
-      </div>
-
-     
-      <div>
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Support</h3>
-        <ul className="mt-4 space-y-4">
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Help Center</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Frequently Asked Questions (FAQ)</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Community Guidelines</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Report an Issue</a></li>
-        </ul>
-      </div>
-
- 
-      <div>
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Legal</h3>
-        <ul className="mt-4 space-y-4">
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Privacy Policy</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Terms of Service</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Cookie Policy</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Data Protection</a></li>
-        </ul>
-      </div>
-
-   
-      <div>
-        <h3 className="text-sm font-semibold uppercase tracking-wider">Install App</h3>
-        <ul className="mt-4 space-y-4">
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Download for iOS</a></li>
-          <li><a href="#" className="text-base text-gray-300 hover:text-white">Download for Android</a></li>
-        </ul>
-      </div>
-    </div>
-
     
-    <div className="mt-8 border-t border-gray-700 pt-8 flex items-center justify-between">
+      
+       <div className="mt-8 border-t border-gray-700 pt-8 flex items-center justify-between">
       <p className="text-base text-gray-400">&copy; 2023 AI Travel Planner. All rights reserved.</p>
-      <div className="flex space-x-6">
-        <a href="#" className="text-gray-300 hover:text-white">
-          <i className="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" className="text-gray-300 hover:text-white">
-          <i className="fab fa-twitter"></i>
-        </a>
-        <a href="#" className="text-gray-300 hover:text-white">
-          <i className="fab fa-instagram"></i>
-        </a>
-        <a href="#" className="text-gray-300 hover:text-white">
-          <i className="fab fa-linkedin"></i>
-        </a>
-      </div>
+      
     </div>
   </div>
 </footer>

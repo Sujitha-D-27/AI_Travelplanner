@@ -167,44 +167,14 @@ function Signup() {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
  
-  // const handleGoogleSignUp = async () => {
-  //   try {
-  //     const result = await signInWithPopup(auth, provider);
-  //     const user = result.user;
-  //     const response = await axios.post('http://localhost:5000/user', {
-  //       username: user.displayName,
-  //       email: user.email,
-  //       password:'Sujitha@345',
-  //       isgoogleuser: true
-  //     });
-  //     if (response.data.message === 'User already exists') {
-  //       // If user already exists, set success message and navigate to next page
-  //       setSuccess(`Welcome back, ${user.displayName}!`);
-  //       setTimeout(() => {
-  //         navigate('/create-trip');
-  //       }, 2000);
-  //     } else {
-  //       // New user, proceed to registration
-  //       setSuccess(`Welcome, ${user.displayName}!`);
-  //       setTimeout(() => {
-  //         navigate('/create-trip');
-  //       }, 2000);
-  //     }
-  //     // console.log(response.data);
-  //     // setSuccess(response.data.message);
-  //     // setError('');
-  //     // setTimeout(() => {
-  //     //   navigate('/create-trip');
-  //     // }, 2000);
-  //   } catch (error) {
-  //     setError('Google sign-up failed, please try again.');
-  //     console.error('Google Sign-Up Error:', error.response?.data || error.message);
-  //   }
-  // };
+ 
   const handleGoogleSignUp = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
+      localStorage.setItem("Email",user.email);
+      console.log(user.email);
       const response = await axios.post('http://localhost:5000/user', {
         username: user.displayName,
         email: user.email,
@@ -214,29 +184,29 @@ function Signup() {
   
      
       if (response.data.message === 'User already exists') {
-
-        const useremail=localStorage.setItem("Email",email);
-          
+      
+        localStorage.setItem("Email",email);
+        console.log(email);
         setSuccess(`Welcome back, ${user.displayName}!`);
         setTimeout(() => {
-          navigate('/create-trip');
+          navigate('/');
         }, 2000);
       } else {
-        // New user, proceed to registration
-        const useremail=localStorage.setItem("Email",email);
-
+       
+        localStorage.setItem("Email",email);
+        console.log(email);
         setSuccess(`Welcome, ${user.displayName}!`);
         setTimeout(() => {
-          navigate('/create-trip');
+          navigate('/');
         }, 2000);
       }
     } catch (error) {
-      // Check if the error is due to the user already existing
+      
       if (error.response?.data?.message === 'User already exists') {
-        const useremail=localStorage.setItem("Email",email);
-
+     
+        
         setSuccess('user already exists');
-        // User already exists, so just a success message
+        
         setTimeout(() => {
           navigate('/login');
         }, 2000);
@@ -278,10 +248,10 @@ function Signup() {
 
   const validateUsername = (username) => username.length <= 30;
 
-  // const validatePassword = (password) => {
-  //   const pwdRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
-  //   return pwdRegex.test(password);
-  // };
+  const validatePassword = (password) => {
+    const pwdRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    return pwdRegex.test(password);
+  };
 
   return (
     <div className="min-h-screen bg-slate-200">

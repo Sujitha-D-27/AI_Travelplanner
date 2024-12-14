@@ -1,53 +1,10 @@
-// import React from 'react';
-// import { useSelector } from 'react-redux';
-
-// function View() {
-//   const tripData = useSelector((state) => state.travelPlan.plan);
-//   console.log(tripData);
-//   // Check if tripData is available and structured correctly
-//   if (!tripData || !tripData.days) {
-//     return <div>Loading...</div>;
-//   }
-
-//   return (
-//     <div>
-//       <h1>{tripData.tripName}</h1>
-//       <p>Duration: {tripData.duration}</p>
-//       <p>Budget: {tripData.budget}</p>
-//       <p>Best Time to Visit: {tripData.bestTimetoVisit}</p>
-
-//       {tripData.days.map((day, index) => (
-//         <div key={index}>
-//           <h2>Day {day.dayNumber}: {day.theme}</h2>
-//           <ul>
-//             {day.plan.map((place, idx) => (
-//               <li key={idx}>
-//                 <h3>{place.placeName}</h3>
-//                 <p>{place.placeDetails}</p>
-//                 <img src={place.placeImageUrl} alt={place.placeName} style={{ width: '100%', height: 'auto' }} />
-//                 <p>Ticket Pricing: {place.ticketPricing}</p>
-//                 <p>Travel Time: {place.travelTime}</p>
-//                 <p>Coordinates: {place.geoCoordinates.join(', ')}</p>
-//               </li>
-//             ))}
-//           </ul>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default View;
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDays, DollarSign, Clock, Ticket, MapPin } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -55,18 +12,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
+import { CalendarDays, DollarSign, Clock, Ticket, MapPin } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 
 const UNSPLASH_API_KEY = "y9a0zjGlZAxJbelRiKSSyTZT92tmT97NBoVaUjOOrRk";
+const WEATHER_API_KEY = "61bab5475d7d76b31b3e803e48099a56";
 
 function View() {
   const [tripData, setTripData] = useState("");
   const [placeImages, setPlaceImages] = useState({});
+  const [weatherData, setWeatherData] = useState({});
 
+  // Fetch images for places
   const fetchImage = async (placeName) => {
     try {
       const response = await axios.get(
@@ -79,6 +40,7 @@ function View() {
     }
   };
 
+  // Parse geo-coordinates from string
   const parseCoordinates = (geoString) => {
     const match = geoString.match(/([-+]?[0-9]*\.?[0-9]+)°?\s*([NS]),\s*([-+]?[0-9]*\.?[0-9]+)°?\s*([EW])/);
     if (!match) return null;
@@ -87,27 +49,23 @@ function View() {
     const lng = parseFloat(match[3]) * (match[4] === "W" ? -1 : 1);
     return { lat, lng };
   };
-  
 
-  const addtrip = async(place)=>{
-
-    const email = "suji@gmail.com";
-  try {
-      
-    const response= await axios.post("http://localhost:5000/wishlist/add", {
-          email,
-          carttrip: [place], 
-        })
-        console.log(response.data.message);
-        
-      }
-      
-  catch(error){
-          console.error("Error saving trip:", error.response?.data || error.message);
-        };
-    
+  // Fetch weather data for places
+  const fetchWeather = async (lat, lon, placeName) => {
+    try {
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`
+      );
+      const weather = {
+        temperature: response.data.main.temp,
+        condition: response.data.weather[0].description,
+        icon: response.data.weather[0].icon,
+      };
+      setWeatherData((prev) => ({ ...prev, [placeName]: weather }));
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+    }
   };
-  
 
   useEffect(() => {
     try {
@@ -119,6 +77,10 @@ function View() {
           day.plan.forEach((place) => {
             if (place.placeName) {
               fetchImage(place.placeName);
+              const coordinates = parseCoordinates(place.geoCoordinates);
+              if (coordinates) {
+                fetchWeather(coordinates.lat, coordinates.lng, place.placeName);
+              }
             }
           });
         });
@@ -137,28 +99,30 @@ function View() {
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-blue-50 to-green-50 min-h-screen">
       <h1 className="text-4xl font-bold mb-6 text-center text-blue-800">{tripData.tripName}</h1>
       <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
-      <div className="flex flex-wrap justify-between items-center">
-         <div className="flex items-center mb-4 md:mb-0">
-          <CalendarDays className="w-6 h-6 text-blue-600 mr-2" />
-          <p className="text-lg"><strong>Duration:</strong> {tripData.duration}</p>
+        <div className="flex flex-wrap justify-between items-center">
+          <div className="flex items-center mb-4 md:mb-0">
+            <CalendarDays className="w-6 h-6 text-blue-600 mr-2" />
+            <p className="text-lg"><strong>Duration:</strong> {tripData.duration}</p>
+          </div>
+          <div className="flex items-center mb-4 md:mb-0">
+            <DollarSign className="w-6 h-6 text-green-600 mr-2" />
+            <p className="text-lg"><strong>Budget:</strong> {tripData.budget}</p>
+          </div>
+          <div className="flex items-center">
+            <Clock className="w-6 h-6 text-orange-600 mr-2" />
+            <p className="text-lg"><strong>Best Time:</strong> {tripData.bestTimetoVisit}</p>
+          </div>
         </div>
-       <div className="flex items-center mb-4 md:mb-0">
-         <DollarSign className="w-6 h-6 text-green-600 mr-2" />
-           <p className="text-lg"><strong>Budget:</strong> {tripData.budget}</p>         </div>
-         <div className="flex items-center">
-          <Clock className="w-6 h-6 text-orange-600 mr-2" />
-          <p className="text-lg"><strong>Best Time:</strong> {tripData.bestTimetoVisit}</p>
-         </div>
-      </div>
       </div>
       {tripData.days.map((day, dayIndex) => (
         <div key={dayIndex} className="mb-12">
           <h2 className="text-3xl font-semibold mb-6 text-blue-700">
             Day {day.dayNumber}: {day.theme}
           </h2>
-          <div className="grid gap-8 md:grid-cols-2">
+         <div className="grid gap-8 md:grid-cols-2">
             {day.plan.map((place, placeIndex) => {
               const coordinates = parseCoordinates(place.geoCoordinates);
+              const weather = weatherData[place.placeName];
               return (
                 <Dialog key={placeIndex}>
                   <DialogTrigger asChild>
@@ -176,6 +140,18 @@ function View() {
                       </div>
                       <CardContent className="p-6">
                         <p className="mb-4 text-gray-600">{place.placeDetails}</p>
+                        {weather && (
+                      <div className="mb-4 flex items-center gap-4">
+                        <img
+                          src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
+                          alt={weather.condition}
+                          className="w-8 h-8"
+                        />
+                        <p className="text-gray-700">
+                          <strong>{weather.condition}</strong>, {weather.temperature}°C
+                        </p>
+                      </div>
+                    )}
                         <div className="flex flex-wrap items-center gap-4 mb-4">
                   <Badge variant="secondary" className="flex items-center">
                     <Ticket className="w-4 h-4 mr-1" />
@@ -230,14 +206,11 @@ function View() {
               );
             })}
           </div>
-         
+          
         </div>
       ))}
-      
     </div>
   );
 }
 
 export default View;
-
-
