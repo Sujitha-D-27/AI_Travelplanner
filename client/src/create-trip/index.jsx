@@ -209,7 +209,7 @@ const navigate=useNavigate();
               onValueChange={(value) => updateFormData('budget', value)}
               className="grid grid-cols-3 gap-4"
             >
-              {['Cheap', 'Moderate', 'Luxury'].map((budgetOption) => (
+              {['Cheap (<15k)', 'Moderate (<50k)', 'Luxury (>50k)'].map((budgetOption) => (
                 <div key={budgetOption} className="relative">
                   <RadioGroupItem value={budgetOption} id={budgetOption} className="peer sr-only" />
                   <Label

@@ -58,6 +58,7 @@ The itinerary should be provided in JSON format and include the following fields
      - geoCoordinates(lat-N/S , Lon-E/W)
      - ticketPricing
      - travelTime
+     -rating for 5
 Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json.
 `;
 

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CalendarDays, DollarSign, Clock, Ticket, MapPin } from "lucide-react";
+import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -33,7 +29,9 @@ function View() {
       const response = await axios.get(
         `https://api.unsplash.com/search/photos?query=${placeName}&per_page=1&client_id=${UNSPLASH_API_KEY}`
       );
-      const imageUrl = response.data.results[0]?.urls?.regular || "https://via.placeholder.com/600x400?text=No+Image+Found";
+      const imageUrl =
+        response.data.results[0]?.urls?.regular ||
+        "https://via.placeholder.com/600x400?text=No+Image+Found";
       setPlaceImages((prev) => ({ ...prev, [placeName]: imageUrl }));
     } catch (error) {
       console.error(`Error fetching image for ${placeName}:`, error);
@@ -42,7 +40,9 @@ function View() {
 
   // Parse geo-coordinates from string
   const parseCoordinates = (geoString) => {
-    const match = geoString.match(/([-+]?[0-9]*\.?[0-9]+)°?\s*([NS]),\s*([-+]?[0-9]*\.?[0-9]+)°?\s*([EW])/);
+    const match = geoString.match(
+      /([-+]?[0-9]*\.?[0-9]+)°?\s*([NS]),\s*([-+]?[0-9]*\.?[0-9]+)°?\s*([EW])/
+    );
     if (!match) return null;
 
     const lat = parseFloat(match[1]) * (match[2] === "S" ? -1 : 1);
@@ -97,20 +97,28 @@ function View() {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-blue-50 to-green-50 min-h-screen">
-      <h1 className="text-4xl font-bold mb-6 text-center text-blue-800">{tripData.tripName}</h1>
+      <h1 className="text-4xl font-bold mb-6 text-center text-blue-800">
+        {tripData.tripName}
+      </h1>
       <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <CalendarDays className="w-6 h-6 text-blue-600 mr-2" />
-            <p className="text-lg"><strong>Duration:</strong> {tripData.duration}</p>
+            <p className="text-lg">
+              <strong>Duration:</strong> {tripData.duration}
+            </p>
           </div>
           <div className="flex items-center mb-4 md:mb-0">
             <DollarSign className="w-6 h-6 text-green-600 mr-2" />
-            <p className="text-lg"><strong>Budget:</strong> {tripData.budget}</p>
+            <p className="text-lg">
+              <strong>Budget:</strong> {tripData.budget}
+            </p>
           </div>
           <div className="flex items-center">
             <Clock className="w-6 h-6 text-orange-600 mr-2" />
-            <p className="text-lg"><strong>Best Time:</strong> {tripData.bestTimetoVisit}</p>
+            <p className="text-lg">
+              <strong>Best Time:</strong> {tripData.bestTimetoVisit}
+            </p>
           </div>
         </div>
       </div>
@@ -119,7 +127,7 @@ function View() {
           <h2 className="text-3xl font-semibold mb-6 text-blue-700">
             Day {day.dayNumber}: {day.theme}
           </h2>
-         <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2">
             {day.plan.map((place, placeIndex) => {
               const coordinates = parseCoordinates(place.geoCoordinates);
               const weather = weatherData[place.placeName];
@@ -129,7 +137,10 @@ function View() {
                     <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-xl">
                       <div className="relative h-64">
                         <img
-                          src={placeImages[place.placeName]||"https://via.placeholder.com/600x400?text=Loading..."}
+                          src={
+                            placeImages[place.placeName] ||
+                            "https://via.placeholder.com/600x400?text=Loading..."
+                          }
                           alt={place.placeName}
                           className="w-full h-full object-cover"
                         />
@@ -139,33 +150,49 @@ function View() {
                         </h3>
                       </div>
                       <CardContent className="p-6">
-                        <p className="mb-4 text-gray-600">{place.placeDetails}</p>
+                        <div className="flex items-center justify-between mb-4">
+                          <p className="text-gray-600">{place.placeDetails}</p>
+                          <div className="flex items-center gap-2">
+                            <Star className="text-yellow-500 w-4 h-4" />
+                            <span className="text-gray-600 font-medium">
+                              {place.rating}
+                            </span>
+                          </div>
+                        </div>
+
                         {weather && (
-                      <div className="mb-4 flex items-center gap-4">
-                        <img
-                          src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                          alt={weather.condition}
-                          className="w-8 h-8"
-                        />
-                        <p className="text-gray-700">
-                          <strong>{weather.condition}</strong>, {weather.temperature}°C
-                        </p>
-                      </div>
-                    )}
+                          <div className="mb-4 flex items-center gap-4">
+                            <img
+                              src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
+                              alt={weather.condition}
+                              className="w-8 h-8"
+                            />
+                            <p className="text-gray-700">
+                              <strong>{weather.condition}</strong>,{" "}
+                              {weather.temperature}°C
+                            </p>
+                          </div>
+                        )}
                         <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <Badge variant="secondary" className="flex items-center">
-                    <Ticket className="w-4 h-4 mr-1" />
-                     {place.ticketPricing}
-                   </Badge>
-                  <Badge variant="outline" className="flex items-center">
-                     <Clock className="w-4 h-4 mr-1" />
-                     {place.travelTime}
-                   </Badge>
-                 </div>
-                 <Button className="w-full">
-                   Explore More
-                   <a className="w-4 h-4 ml-2" href="#" ></a>
-                 </Button>
+                          <Badge
+                            variant="secondary"
+                            className="flex items-center"
+                          >
+                            <Ticket className="w-4 h-4 mr-1" />
+                            {place.ticketPricing}
+                          </Badge>
+                          <Badge
+                            variant="outline"
+                            className="flex items-center"
+                          >
+                            <Clock className="w-4 h-4 mr-1" />
+                            {place.travelTime}
+                          </Badge>
+                        </div>
+                        <Button className="w-full">
+                          Explore More
+                          <a className="w-4 h-4 ml-2" href="#"></a>
+                        </Button>
                       </CardContent>
                     </Card>
                   </DialogTrigger>
@@ -188,17 +215,24 @@ function View() {
                         </MapContainer>
                       )}
                       <div className="flex flex-wrap items-center gap-4 mb-4">
-                        <p className="text-gray-700 mb-4">{place.description}</p>
-                       
-                        <Badge variant="secondary" className="flex items-center">
-                    <Ticket className="w-4 h-4 mr-1" />
-                     {place.ticketPricing}
-                   </Badge>
-                   <Badge variant="outline" className="flex items-center">
-                     <Clock className="w-4 h-4 mr-1" />
-                     {place.travelTime}
-                   </Badge>
-                   <Button onClick={()=>addtrip(place)}>Add to my trip</Button>
+                        <p className="text-gray-700 mb-4">
+                          {place.description}
+                        </p>
+
+                        <Badge
+                          variant="secondary"
+                          className="flex items-center"
+                        >
+                          <Ticket className="w-4 h-4 mr-1" />
+                          {place.ticketPricing}
+                        </Badge>
+                        <Badge variant="outline" className="flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {place.travelTime}
+                        </Badge>
+                        <Button onClick={() => addtrip(place)}>
+                          Add to my trip
+                        </Button>
                       </div>
                     </div>
                   </DialogContent>
@@ -206,7 +240,6 @@ function View() {
               );
             })}
           </div>
-          
         </div>
       ))}
     </div>
