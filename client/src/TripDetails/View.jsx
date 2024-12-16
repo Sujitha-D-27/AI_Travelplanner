@@ -91,6 +91,8 @@ function View() {
     try {
       const savedData = JSON.parse(localStorage.getItem("TripData"));
       setTripData(savedData);
+      console.log("hotelll00",savedData.hotel);
+      
 
       if (savedData && savedData.days) {
         savedData.days.forEach((day) => {
@@ -262,7 +264,42 @@ function View() {
           </div>
         </div>
       ))}
-    </div>
+      
+      <div className="mt-12">
+        <h2 className="text-3xl font-semibold mb-6 text-blue-700">
+          Recommended Hotels
+        </h2>
+        <div className="grid gap-8 md:grid-cols-2">
+          {tripData.hotel.map((hotel, index) => {
+            const coordinates = parseCoordinates(hotel.geoCoordinates);
+            return (
+              <Card key={index} className="overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold">
+                    {hotel.hotelname}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700">{hotel.description}</p>
+                  {coordinates && (
+                    <MapContainer
+                      center={coordinates}
+                      zoom={15}
+                      className="w-full h-48 rounded-lg mt-4"
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <Marker position={coordinates}></Marker>
+                    </MapContainer>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+  
+      </div>
+    
   );
 }
 

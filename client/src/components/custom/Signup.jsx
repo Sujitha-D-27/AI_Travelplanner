@@ -189,7 +189,7 @@ function Signup() {
         console.log(email);
         setSuccess(`Welcome back, ${user.displayName}!`);
         setTimeout(() => {
-          navigate('/');
+          navigate('/login');
         }, 2000);
       } else {
        
@@ -197,7 +197,7 @@ function Signup() {
         console.log(email);
         setSuccess(`Welcome, ${user.displayName}!`);
         setTimeout(() => {
-          navigate('/');
+          navigate('/login');
         }, 2000);
       }
     } catch (error) {

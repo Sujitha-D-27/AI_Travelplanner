@@ -49,6 +49,7 @@ The itinerary should be provided in JSON format and include the following fields
 5. days: Each day should include :
    - dayNumber
    - theme
+  
    - plan: A list of 4 places, where each place contains:
      - placeName (where donot include any departure places like airport)
      - placeDetails
@@ -59,6 +60,10 @@ The itinerary should be provided in JSON format and include the following fields
      - ticketPricing
      - travelTime
      -rating for 5
+    6. - hotel: A list of 2 hotels to stay , where each hotel contains:
+       - hotelname 
+       - geoCoordinates(lat-N/S , Lon-E/W)
+       - description
 Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json.
 `;
 
