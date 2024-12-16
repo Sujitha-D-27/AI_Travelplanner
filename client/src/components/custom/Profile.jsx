@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 
 const user = {
-  name: "sujii",
-  email:"suji@gmail.com", 
+  name: localStorage.getItem("name"),
+  email:localStorage.getItem("Email"), 
   avatar: "https://github.com/shadcn.png",
   role: "Traveler",
 };

@@ -13,8 +13,8 @@ export default function Hero() {
   },[])
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
-      <header className="bg-white shadow-sm">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="bg-white shadow-sm ">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between ">
           <div className="flex items-center">
             <Plane className="h-8 w-8 text-indigo-600" />
             <span className="ml-2 text-2xl font-bold text-gray-900">BUDGET QUEST</span>
@@ -86,7 +86,7 @@ export default function Hero() {
                 { icon: Users, title: 'Group-Oriented', description: 'Plan for solo trips, couples, families, or friend groups.' },
               ].map((feature, index) => (
                 <Card key={index}>
-                  <CardContent className="p-6">
+                  <CardContent className="p-6 ">
                     <feature.icon className="h-10 w-10 text-indigo-600 mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900">{feature.title}</h3>
                     <p className="mt-2 text-gray-600">{feature.description}</p>
@@ -141,11 +141,21 @@ export default function Hero() {
             </p>
             <div className="mt-8 flex justify-center">
               <div className="inline-flex rounded-md shadow">
-                <Link to = {'/create-trip'}>
+                {login?
+                (<Link to = {'/login'}>
                 <Button size="lg" className="px-8 py-3 text-lg font-semibold bg-white text-indigo-600 hover:bg-gray-50">
                   Get Started for Free
                 </Button>
-                </Link>
+                </Link>)
+                :
+                (
+                  <Link to={'/create-trip'}>
+                    <Button size="lg" className="px-8 py-3 text-lg font-semibold bg-white text-indigo-600 hover:bg-gray-50">
+                  Get Started for Free
+                </Button>
+                  </Link>
+                )
+}
               </div>
             </div>
           </div>

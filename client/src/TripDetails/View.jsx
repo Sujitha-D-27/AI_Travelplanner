@@ -14,7 +14,7 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-
+import { toast } from "react-hot-toast";
 const UNSPLASH_API_KEY = "y9a0zjGlZAxJbelRiKSSyTZT92tmT97NBoVaUjOOrRk";
 const WEATHER_API_KEY = "61bab5475d7d76b31b3e803e48099a56";
 
@@ -31,7 +31,7 @@ function View() {
       );
       const imageUrl =
         response.data.results[0]?.urls?.regular ||
-        "https://via.placeholder.com/600x400?text=No+Image+Found";
+        "https://tse4.mm.bing.net/th?id=OIP.yULXd4mKfGiBwqKWoA7D0AHaEo&pid=Api&P=0&h=180";
       setPlaceImages((prev) => ({ ...prev, [placeName]: imageUrl }));
     } catch (error) {
       console.error(`Error fetching image for ${placeName}:`, error);
@@ -56,6 +56,7 @@ function View() {
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`
       );
+      // console.log(response.data);
       const weather = {
         temperature: response.data.main.temp,
         condition: response.data.weather[0].description,
@@ -66,6 +67,25 @@ function View() {
       console.error("Error fetching weather data:", error);
     }
   };
+
+  const addtrip = async(place)=>{
+    const email = localStorage.getItem("Email");
+    try {
+        
+      const response= await axios.post("http://localhost:5000/wishlist/add", {
+            email,
+            carttrip: [place], 
+          })
+          toast.success(response.data.message || "Item added to your profile!");
+          
+        }
+        
+    catch(error){
+      const errorMessage = error.response?.data?.message || "Failed to add item.";
+      toast.error(errorMessage);
+          };
+          };
+  
 
   useEffect(() => {
     try {

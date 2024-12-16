@@ -18,17 +18,31 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      const useremail=user.email
-     
+      const useremail=user.email;
       localStorage.setItem("Email",useremail);
-      console.log(user.email);
-      setSuccess(`Welcome, ${user.displayName}!`);
-      setTimeout(() => {
-        navigate('/'); 
-      }, 2000);
-    } catch (error) {
-      setError('Google sign-in failed, please try again.');
+      
+      const response = await axios.post('http://localhost:5000/logingoogle', {
+       useremail:useremail
+
+      });
+      console.log(response.data.username);
+      const username=response.data.username;
+      localStorage.setItem("name",username)
+      console.log(localStorage.getItem("name"));
+      
+      setSuccess(response.data.message);
+      setError('');
+      setTimeout(() => navigate('/'), 2000);
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setError('Account does not exist, please signup');
+      } 
+      else {
+        setError('Server error, please try again later');
+      }
+     
     }
+    
   };
 
   const handleSubmit = async (e) => {
@@ -45,6 +59,10 @@ function Login() {
       console.log(email);
       const response = await axios.post('http://localhost:5000/loginvalid', {email, password});
       console.log(response.data);
+      const username=response.data.username;
+      localStorage.setItem("name",username)
+      console.log(localStorage.getItem("name"));
+      
       setSuccess(response.data.message);
       setError('');
       setTimeout(() => navigate('/'), 2000);

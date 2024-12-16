@@ -35,7 +35,7 @@ app.post('/gemini', async (req, res) => {
     const { query: location, days, budget: amount, people } = req.body;
     const prompt = `
         
-Generate a travel plan for the following details:
+Generate a travel plan for the following details with exact number of days:
 - Location: ${location}
 - Duration: ${days} Days
 - Number of People: ${people}
@@ -50,7 +50,7 @@ The itinerary should be provided in JSON format and include the following fields
    - dayNumber
    - theme
    - plan: A list of 4 places, where each place contains:
-     - placeName
+     - placeName (where donot include any departure places like airport)
      - placeDetails
      - placeImageUrl
      - description (100 words)
@@ -187,6 +187,22 @@ app.post('/loginvalid',async(req,res)=>{
     }
     res.status(200).json(Existinguser);
   }
+  catch(err){
+    console.log("server error",err);
+    res.status(500).json({message:'Server error'});
+  }
+})
+app.post('/logingoogle',async(req,res)=>{
+  const email =req.body.useremail;
+  
+  try {
+    const Existinguser = await User.findOne({ email });
+    if (!Existinguser) {
+        return res.status(404).json({ message: 'Account does not exist' });
+    }
+    
+    res.status(200).json(Existinguser);
+  } 
   catch(err){
     console.log("server error",err);
     res.status(500).json({message:'Server error'});
