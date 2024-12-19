@@ -32,7 +32,7 @@ function Login() {
       
       setSuccess(response.data.message);
       setError('');
-      setTimeout(() => navigate('/'), 2000);
+      setTimeout(() => navigate('/create-trip'), 2000);
     } catch (err) {
       if (err.response && err.response.status === 404) {
         setError('Account does not exist, please signup');

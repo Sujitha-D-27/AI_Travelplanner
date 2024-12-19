@@ -51,7 +51,7 @@ The itinerary should be provided in JSON format and include the following fields
    - theme
   
    - plan: A list of 4 places, where each place contains:
-     - placeName (where donot include any departure places like airport)
+     - placeName 
      - placeDetails
      - placeImageUrl
      - description (100 words)
@@ -60,10 +60,15 @@ The itinerary should be provided in JSON format and include the following fields
      - ticketPricing
      - travelTime
      -rating for 5
-    6. - hotel: A list of 2 hotels to stay , where each hotel contains:
-       - hotelname 
-       - geoCoordinates(lat-N/S , Lon-E/W)
+  6. - hotel: A list of 2 hotels to stay, where each hotel contains:
+       - hotelname
+       - geoCoordinates(lat-N/S, Lon-E/W)
        - description
+7. - emergencyHub: A list of 4 emergency hubs (hospital, police station, fire service, bank), where each hub contains:
+       - name
+       - geoCoordinates(lat-N/S, Lon-E/W)for one location
+       - address of the geocoordinates 
+
 Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json.
 `;
 
@@ -121,7 +126,7 @@ app.post('/wishlist/add', async (req, res) => {
     }
   wishlist.carttrip.push(...carttrip);
   await wishlist.save();  
-  return res.status(200).json({ message: 'Item added or u can call updated' });
+  return res.status(200).json({ message: 'Item added to your Wishlist' });
 
   } catch (error) {
     console.error(error);
@@ -213,6 +218,45 @@ app.post('/logingoogle',async(req,res)=>{
     res.status(500).json({message:'Server error'});
   }
 })
+app.delete('/delete', async (req, res) => {
+  const { email, placeName } = req.body;
+
+  try {
+    const deleteres = await Wishlist.updateOne(
+      { email: email },
+      { $pull: { carttrip: { placeName: placeName } } }
+    );
+    
+    if (deleteres.modifiedCount > 0) {
+      res.status(200).json({ message: "Deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Unable to find" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.patch("/complete", async (req, res) => {
+  const { email, placeName } = req.body;
+
+  try {
+    const updated = await Wishlist.updateOne(
+      { email, "carttrip.placeName": placeName },
+      { $set: { "carttrip.$.completed": true } }
+    );
+
+    if (updated.modifiedCount > 0) {
+      res.status(200).send({ message: "Status updated successfully." });
+    } else {
+      res.status(400).send({ message: "No matching record found." });
+    }
+  } catch (error) {
+    console.error("Error updating completion status:", error);
+    res.status(500).send({ message: "Error updating completion status." });
+  }
+});
+
 
 // Start the server
 app.listen(5000, () => {

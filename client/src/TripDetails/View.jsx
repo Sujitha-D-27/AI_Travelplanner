@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -14,7 +15,9 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-hot-toast";
+import { jsPDF } from "jspdf";
+// import { toast } from "react-hot-toast";
+import { ToastContainer, toast } from 'react-toastify';
 const UNSPLASH_API_KEY = "y9a0zjGlZAxJbelRiKSSyTZT92tmT97NBoVaUjOOrRk";
 const WEATHER_API_KEY = "61bab5475d7d76b31b3e803e48099a56";
 
@@ -77,12 +80,14 @@ function View() {
             carttrip: [place], 
           })
           toast.success(response.data.message || "Item added to your profile!");
+      
           
         }
         
     catch(error){
       const errorMessage = error.response?.data?.message || "Failed to add item.";
       toast.error(errorMessage);
+     
           };
           };
   
@@ -91,7 +96,8 @@ function View() {
     try {
       const savedData = JSON.parse(localStorage.getItem("TripData"));
       setTripData(savedData);
-      console.log("hotelll00",savedData.hotel);
+      console.log("hotel",savedData.hotel)
+      console.log("hosp",savedData.emergencyHub);
       
 
       if (savedData && savedData.days) {
@@ -117,8 +123,63 @@ function View() {
     return <h2>No Trip Data Found</h2>;
   }
 
+  const handleGeneratePDF = () => {
+    console.log(tripData);
+    const doc = new jsPDF();
+  
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text(tripData.tripName || "Trip Overview", 10, 10);
+  
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Duration: ${tripData.duration}`, 10, 20);
+    doc.text(`Budget: ${tripData.budget}`, 10, 30);
+  
+    let yPosition = 40;
+  
+    for (const day of tripData.days) {
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+      doc.text(`Day ${day.dayNumber}: ${day.theme}`, 10, yPosition);
+      yPosition += 10;
+  
+      for (const place of day.plan) {
+        if (yPosition > 280) {
+          doc.addPage();
+          yPosition = 10;
+        }
+  
+        doc.setFont("helvetica", "bold");
+        doc.text(`Place: ${place.placeName}`, 10, yPosition);
+        yPosition += 8;
+  
+        doc.setFont("helvetica", "normal");
+        doc.text(`Details: ${place.placeDetails || "N/A"}`, 10, yPosition);
+        yPosition += 8;
+        
+        doc.setFont("helvetica", "normal");
+        doc.text(`Address: ${place.address || "N/A"}`, 10, yPosition);
+        yPosition += 8;
+
+        doc.setFont("helvetica", "normal");
+        doc.text(`TravelTime: ${place.travelTime || "N/A"}`, 10, yPosition);
+        yPosition += 8;
+
+        doc.text(`Rating: ${place.rating || "N/A"}`, 10, yPosition);
+        yPosition += 8;
+      }
+  
+      yPosition += 10;
+    }
+  
+    doc.save(`${tripData.tripName || "TripPlan"}.pdf`);
+  };
+  
+
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-blue-50 to-green-50 min-h-screen">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <h1 className="text-4xl font-bold mb-6 text-center text-blue-800">
         {tripData.tripName}
       </h1>
@@ -296,8 +357,49 @@ function View() {
             );
           })}
         </div>
+        
       </div>
-  
+      <div className="mt-12">
+        <h2 className="text-3xl font-semibold mb-6 text-blue-700">
+          Emergency Hub
+        </h2>
+        <div className="grid gap-8 md:grid-cols-2">
+          {tripData.emergencyHub.map((place, index) => {
+            const coordinates = parseCoordinates(place.geoCoordinates);
+            return (
+              <Card key={index} className="overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold">
+                    {place.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700">{place.address}</p>
+                  {coordinates && (
+                    <MapContainer
+                      center={coordinates}
+                      zoom={15}
+                      className="w-full h-48 rounded-lg mt-4"
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <Marker position={coordinates}></Marker>
+                    </MapContainer>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+        
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 mt-4">
+      <Link to={'/'}>
+  <Button>Back to Home</Button>
+  </Link>
+        <Button onClick={handleGeneratePDF} className="px-28 ml-64 w-24">Download Plan as PDF</Button>
+       </div>
+      
+
       </div>
     
   );

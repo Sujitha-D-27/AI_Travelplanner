@@ -12,7 +12,8 @@ const mongoose = require('mongoose');
           geoCoordinates:String,
           ticketPricing: String,
           travelTime: String,
-          addedAt: { type: Date, default: Date.now }
+          addedAt: { type: Date, default: Date.now },
+          completed: { type: Boolean, default: false }
         }]
 
  }
