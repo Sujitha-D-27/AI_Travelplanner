@@ -392,12 +392,18 @@ function View() {
         </div>
         
       </div>
-      <div className="grid gap-6 md:grid-cols-2 mt-4">
-      <Link to={'/'}>
-  <Button>Back to Home</Button>
+      <div className="flex flex-wrap justify-between items-center gap-4 mt-6">
+  <Link to={'/'}>
+    <Button className="w-full md:w-auto">Back to Home</Button>
   </Link>
-        <Button onClick={handleGeneratePDF} className="px-28 ml-64 w-24">Download Plan as PDF</Button>
-       </div>
+  <Button 
+    onClick={handleGeneratePDF} 
+    className="w-auto md:w-auto px-4 py-2 text-sm md:px-20"
+  >
+    Download Plan as PDF
+  </Button>
+</div>
+
       
 
       </div>

@@ -17,22 +17,27 @@ function Login() {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
+      console.log(result);
       const user = result.user;
       const useremail=user.email;
+      const photo=user.photoURL;
       localStorage.setItem("Email",useremail);
-      
+      localStorage.setItem("Photo",photo);
+      console.log(photo);
       const response = await axios.post('http://localhost:5000/logingoogle', {
        useremail:useremail
 
       });
       console.log(response.data.username);
       const username=response.data.username;
-      localStorage.setItem("name",username)
+      localStorage.setItem("name",username);
+      
       console.log(localStorage.getItem("name"));
+   
       
       setSuccess(response.data.message);
       setError('');
-      setTimeout(() => navigate('/create-trip'), 2000);
+      setTimeout(() => navigate('/'), 2000);
     } catch (err) {
       if (err.response && err.response.status === 404) {
         setError('Account does not exist, please signup');
