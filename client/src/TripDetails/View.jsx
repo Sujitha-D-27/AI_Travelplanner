@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CalendarDays, DollarSign, Clock, Ticket, MapPin } from "lucide-react";
+import { CalendarDays, DollarSign, Clock, Ticket, MapPin,Info } from "lucide-react";
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
@@ -25,7 +25,7 @@ function View() {
   const [tripData, setTripData] = useState("");
   const [placeImages, setPlaceImages] = useState({});
   const [weatherData, setWeatherData] = useState({});
-
+ 
   // Fetch images for places
   const fetchImage = async (placeName) => {
     try {
@@ -175,6 +175,9 @@ function View() {
   
     doc.save(`${tripData.tripName || "TripPlan"}.pdf`);
   };
+
+  
+
   
 
   return (
@@ -183,6 +186,59 @@ function View() {
       <h1 className="text-4xl font-bold mb-6 text-center text-blue-800">
         {tripData.tripName}
       </h1>
+      <div className="flex justify-end mb-6">
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="flex items-center gap-2 p-3 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200">
+              <Info className="w-6 h-6" />
+              <span>Recommendations</span>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] border p-4 shadow-lg rounded-lg ">
+  <DialogHeader>
+    <DialogTitle>Travel Recommendations</DialogTitle>
+  </DialogHeader>
+  <div className="text-gray-700 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <h2 className="text-lg font-bold mb-2">Clothes</h2>
+      <ul className="list-disc list-inside">
+        {tripData.clothes?.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 className="text-lg font-bold mb-2">Medicines</h2>
+      <ul className="list-disc list-inside">
+        {tripData.medicines?.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 className="text-lg font-bold mb-2">Food</h2>
+      <ul className="list-disc list-inside">
+        {tripData.food?.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 className="text-lg font-bold mb-2">Currency</h2>
+      <ul className="list-disc list-inside">
+        <li>Type: {tripData.currency?.type}</li>
+        <li>Estimated Amount: {tripData.currency?.estimatedAmount}</li>
+      </ul>
+    </div>
+  </div>
+</DialogContent>
+
+
+        </Dialog>
+      </div>
       <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
@@ -205,6 +261,7 @@ function View() {
           </div>
         </div>
       </div>
+      
       {tripData.days.map((day, dayIndex) => (
         <div key={dayIndex} className="mb-12">
           <h2 className="text-3xl font-semibold mb-6 text-blue-700">

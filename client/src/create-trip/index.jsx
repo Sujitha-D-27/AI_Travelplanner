@@ -207,9 +207,9 @@ const navigate=useNavigate();
             <RadioGroup
               value={formData.budget}
               onValueChange={(value) => updateFormData('budget', value)}
-              className="grid grid-cols-3 gap-4"
+              className="grid grid-cols-1 gap-4"
             >
-              {['Cheap (<15k)', 'Moderate (<50k)', 'Luxury (>50k)'].map((budgetOption) => (
+              {['Affordable(<15k)', 'Reasonable(<50k)', 'Premium(>50k)'].map((budgetOption) => (
                 <div key={budgetOption} className="relative">
                   <RadioGroupItem value={budgetOption} id={budgetOption} className="peer sr-only" />
                   <Label
@@ -255,7 +255,7 @@ const navigate=useNavigate();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-200 flex flex-col items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -124,6 +124,53 @@ export default function Hero() {
             </div>
           </div>
         </section>
+        <section id="how-it-works" className="py-12 md:py-24 lg:py-32">
+          <div className="container px-6 md:px-6 lg:px-8">
+            <h2 className="text-3xl font-bold sm:text-5xl text-center mb-12 ml-28">
+              How It Works
+            </h2>
+            <div className="grid gap-10 lg:grid-cols-5 ml-28">
+              {[ 
+                { step: 1, title: "Choose Destination", description: "Enter your dream destination." },
+                { step: 2, title: "Set Duration", description: "Specify the number of days for your trip." },
+                { step: 3, title: "Define Budget", description: "Input your travel budget." },
+                { step: 4, title: "Select Traveler Type", description: "Choose from solo, couple, family, or friends." },
+                { step: 5, title: "Get Your Plan", description: "Receive a personalized itinerary instantly." }
+              ].map((item) => (
+                <div key={item.step} className="flex flex-col items-center space-y-4 text-center">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-black text-3xl font-bold text-white">
+                    {item.step}
+                  </div>
+                  <h3 className="text-xl font-bold">{item.title}</h3>
+                  <p className="text-gray-500">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section id="get-started" className="bg-indigo-700 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
+            <h2 className="text-3xl font-extrabold sm:text-4xl">
+              Ready to plan your next adventure?
+            </h2>
+            <p className="mt-4 text-xl">
+              Start your AI-powered travel planning experience today.
+            </p>
+            <div className="mt-8 flex justify-center">
+              <div className="inline-flex rounded-md shadow">
+              
+                    <Button
+                      size="lg"
+                      className="px-8 py-3 text-lg font-semibold bg-white text-indigo-600 hover:bg-gray-50"
+                    >
+                     Want a sneak peek? Watch the demo!
+                    </Button>
+               
+              
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="bg-gray-800 text-gray-400 py-6">

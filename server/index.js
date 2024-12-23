@@ -36,40 +36,55 @@ app.post('/gemini', async (req, res) => {
     const prompt = `
         
 Generate a travel plan for the following details with exact number of days:
-- Location: ${location}
-- Duration: ${days} Days
-- Number of People: ${people}
-- Budget: ${amount}
+  - Location: ${location}
+  - Duration: ${days} Days
+  - Number of People: ${people}
+  - Budget: ${amount}
 
-The itinerary should be provided in JSON format and include the following fields:
-1. tripName
-2. duration
-3. budget
-4. bestTimetoVisit
-5. days: Each day should include :
-   - dayNumber
-   - theme
-  
-   - plan: A list of 4 places, where each place contains:
-     - placeName 
-     - placeDetails
-     - placeImageUrl
-     - description (100 words)
-     -address(detailed address for placename)
-     - geoCoordinates(lat-N/S , Lon-E/W)
-     - ticketPricing
-     - travelTime
-     -rating for 5
-  6. - hotel: A list of 2 hotels to stay, where each hotel contains:
-       - hotelname
-       - geoCoordinates(lat-N/S, Lon-E/W)
-       - description
-7. - emergencyHub: A list of 4 emergency hubs (hospital, police station, fire service, bank), where each hub contains:
-       - name
-       - geoCoordinates(lat-N/S, Lon-E/W)for one location
-       - address of the geocoordinates 
+  The itinerary should be provided in JSON format without any comments and include the following fields:
+  1. tripName
+  2. duration
+  3. budget
+  4. bestTimetoVisit
+  5. days: Each day should include :
+    - dayNumber
+    - theme
+    
+    - plan: A list of 4 places sort based on rating, where each place contains:
+      - placeName 
+      - placeDetails
+      - placeImageUrl
+      - description (150 words)
+      -address(detailed address for placename)
+      - geoCoordinates(lat-N/S , Lon-E/W)
+      - ticketPricing
+      - travelTime
+      -rating for 5
+    6. - hotel: A list of 2 hotels to stay, where each hotel contains:
+        - hotelname
+        - geoCoordinates(lat-N/S, Lon-E/W)
+        - description
+  7. - emergencyHub: A list of 4 emergency hubs (hospital, police station, fire service, bank), where each hub contains:
+        - name
+        - geoCoordinates(lat-N/S, Lon-E/W)for one location
+        - address of the geocoordinates 
 
-Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json.
+        Here’s the refined prompt for your recommendation requirements:
+
+        Recommendations Details
+        
+        Clothes:
+        Specify the type of clothes to be carried based on the weather conditions during the trip.
+        
+        Medicines:
+        Provide a list of general medicines to be carried, including recommendations based on the bestTimetoVisit and the prevailing weather conditions.
+        
+        Food:
+        Suggest the type of food suitable for consumption based on the tripName or the destination's cuisine.
+        
+        Currency:
+        Recommend the type of currency required for the destination and the estimated amount needed based on the trip's budget.
+  Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json the hotel and emergency hub shpuld be at final for whole trip and dont add it in each day plan.
 `;
 
     try {
@@ -257,6 +272,26 @@ app.patch("/complete", async (req, res) => {
   }
 });
 
+app.get("/profile/:email", async (req, res) => {
+  const { email } = req.params;
+
+  try {
+  
+    const wishlist = await Wishlist.find({ email: email });
+
+    if (!wishlist.length) {
+      return res.status(404).json({ message: "No data found for this user." });
+    }
+
+    res.status(200).json({
+      email,
+      wishlist,
+    });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+})
 
 
 // Start the server

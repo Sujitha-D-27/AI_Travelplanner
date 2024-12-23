@@ -15,6 +15,7 @@ import Signup from './components/custom/Signup'
 import View from './TripDetails/View'
 
 import Profile from './components/custom/Profile'
+import SharableProfile from './components/custom/SharableProfile'
 
 const router=createBrowserRouter([{
 path:'/',
@@ -39,6 +40,10 @@ element:<App/>
 {
   path:'/profile',
   element:<Profile/>
+},
+{
+  path: "/profile/:email",
+  element:<SharableProfile/>
 }
 ])
 createRoot(document.getElementById('root')).render(

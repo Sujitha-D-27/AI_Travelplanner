@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ClockIcon,MoreVerticalIcon,Ticket,Clock } from "lucide-react";
+import { ClockIcon,MoreVerticalIcon,Ticket,Clock,Share2Icon,ArrowBigLeft } from "lucide-react";
 import axios from "axios";
 import { toast,ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
@@ -31,6 +31,7 @@ export default function Profile() {
   const [email, setEmail] = useState(null);
   const [filter, setFilter] = useState("all");
   const [filteredPlans, setFilteredPlans] = useState([]);
+  const [profileLink, setProfileLink] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,6 +56,14 @@ export default function Profile() {
     };
 
     fetchWishlist();
+  }, [email]);
+
+  
+  useEffect(() => {
+    const generateProfileLink = () => {
+      setProfileLink(`http://localhost:5000/profile/${email}`);
+    };
+    generateProfileLink();
   }, [email]);
 
   const logout = () => {
@@ -111,12 +120,43 @@ export default function Profile() {
       console.error("Error while updating completion status:", error);
     }
   };
+  const back=()=>{
+    navigate('/');
+  }
 
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `${user.name}'s Profile`,
+          url: profileLink,
+        })
+        .then(() => toast.success("Profile link shared!"))
+        .catch((error) => toast.error("Error sharing the link: " + error));
+    } else {
+     
+      navigator.clipboard.writeText(profileLink);
+      toast.success("Profile link copied to clipboard!");
+    }
+  };
   return (
     <div className="container mx-auto p-6 space-y-8">
+      <div className="flex items-center">
+  <div
+    className="bg-slate-700 text-white flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:bg-slate-400 hover:shadow-lg transition-all duration-300 cursor-pointer"
+    onClick={back}
+  >
+    <ArrowBigLeft className="w-6 h-6" />
+  </div>
+</div>
+
+
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <Card className="overflow-hidden">
-        <div className="bg-gradient-to-r from-primary to-primary-foreground h-32" />
+        <div className="bg-gradient-to-r from-primary to-primary-foreground h-32">
+      
+        </div>
         <CardHeader className="relative pb-8">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <Avatar className="h-24 w-24 border-4 border-background absolute -top-12 sm:relative sm:top-0">
@@ -137,6 +177,11 @@ export default function Profile() {
               <div className="mt-4 sm:mt-0 sm:absolute sm:right-4">
                 <Button onClick={logout} className="px-11">
                   Logout
+                </Button>
+              </div>
+              <div className="absolute top-4 right-4">
+                <Button onClick={handleShare} className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full">
+                  <Share2Icon className="h-5 w-5 text-primary" />
                 </Button>
               </div>
             </div>

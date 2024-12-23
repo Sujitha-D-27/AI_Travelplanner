@@ -90,7 +90,7 @@ function Signup() {
       const response = await axios.post('http://localhost:5000/user', { username, email, password });
       setSuccess(response.data.message);
       setError('');
-      setTimeout(() => navigate('/create-trip'), 2000);
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed. Please try again.');
     }
