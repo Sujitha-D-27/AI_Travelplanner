@@ -134,8 +134,13 @@ function Login() {
               </Button>
             </div>
             <div className="mt-5 text-center">
-              <p>Don't have an account? <a href="/signup" className="text-blue-500">Sign up</a></p>
-            </div>
+  <p>
+    Don't have an account?{" "}
+    <Link to="/signup" className="text-blue-500">
+      Sign up
+    </Link>
+  </p>
+</div>
           </div>
         </div>
       </div>
