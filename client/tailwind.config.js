@@ -57,13 +57,14 @@
 // };
 
 
-
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+	content: [
+	  './src/**/*.{js,ts,jsx,tsx}', // Adjust based on your folder structure
+	  './node_modules/shadcn-ui/**/*.{js,ts,jsx,tsx}', // Include ShadCN components
+	],
 	theme: {
 	  extend: {},
 	},
 	plugins: [],
-  }
+  };
   
