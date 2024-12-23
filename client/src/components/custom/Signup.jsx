@@ -25,7 +25,7 @@ function Signup() {
       localStorage.setItem("Email",user.email);
       localStorage.setItem("Photo",photo);
       console.log(user.email);
-      const response = await axios.post('http://localhost:5000/user', {
+      const response = await axios.post('https://ai-travelplanner-zmzg.onrender.com/user', {
         username: user.displayName,
         email: user.email,
         password: 'Sujitha@3456',
@@ -87,7 +87,7 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/user', { username, email, password });
+      const response = await axios.post('https://ai-travelplanner-zmzg.onrender.com/user', { username, email, password });
       setSuccess(response.data.message);
       setError('');
       setTimeout(() => navigate('/login'), 2000);

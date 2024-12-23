@@ -100,7 +100,7 @@ const navigate=useNavigate();
       };
 
   
-      const response = await axios.post('http://localhost:5000/gemini', payload);
+      const response = await axios.post('https://ai-travelplanner-zmzg.onrender.com/gemini', payload);
 
       console.log('API Response:', response.data);
       

@@ -45,7 +45,7 @@ export default function Profile() {
     const fetchWishlist = async () => {
       try {
         if (email) {
-          const response = await axios.get(`http://localhost:5000/wishlist/${email}`);
+          const response = await axios.get(`https://ai-travelplanner-zmzg.onrender.com/${email}`);
           setPlanHistory(response.data.wishlist || []);
         } else {
           console.error("Email is not available in localStorage.");
@@ -61,7 +61,7 @@ export default function Profile() {
   
   useEffect(() => {
     const generateProfileLink = () => {
-      setProfileLink(`http://localhost:5000/profile/${email}`);
+      setProfileLink(`https://ai-travelplanner-zmzg.onrender.com/${email}`);
     };
     generateProfileLink();
   }, [email]);
@@ -88,7 +88,7 @@ export default function Profile() {
 
   const handleDelete = async (placeName) => {
     try {
-      const response = await axios.delete("http://localhost:5000/delete", {
+      const response = await axios.delete("https://ai-travelplanner-zmzg.onrender.com/delete", {
         data: { email: email, placeName: placeName },
       });
 
@@ -103,7 +103,7 @@ export default function Profile() {
 
   const handleComplete = async (placeName) => {
     try {
-      const response = await axios.patch("http://localhost:5000/complete", {
+      const response = await axios.patch("https://ai-travelplanner-zmzg.onrender.com/complete", {
         email: email,
         placeName: placeName,
       });

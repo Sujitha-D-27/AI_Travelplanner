@@ -75,7 +75,7 @@ function View() {
     const email = localStorage.getItem("Email");
     try {
         
-      const response= await axios.post("http://localhost:5000/wishlist/add", {
+      const response= await axios.post("https://ai-travelplanner-zmzg.onrender.com/wishlist/add", {
             email,
             carttrip: [place], 
           })

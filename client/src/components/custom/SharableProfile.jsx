@@ -11,7 +11,7 @@ export default function SharableProfile({ match }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/profile/${email}`);
+        const response = await axios.get(`https://ai-travelplanner-zmzg.onrender.com/${email}`);
         setWishlist(response.data.wishlist || []);
       } catch (error) {
         console.error("Error fetching profile data:", error);

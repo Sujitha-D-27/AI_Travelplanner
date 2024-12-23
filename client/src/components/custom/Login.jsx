@@ -24,7 +24,7 @@ function Login() {
       localStorage.setItem("Email",useremail);
       localStorage.setItem("Photo",photo);
       console.log(photo);
-      const response = await axios.post('http://localhost:5000/logingoogle', {
+      const response = await axios.post('https://ai-travelplanner-zmzg.onrender.com/logingoogle', {
        useremail:useremail
 
       });
@@ -62,7 +62,7 @@ function Login() {
      
       localStorage.setItem("Email",email);
       console.log(email);
-      const response = await axios.post('http://localhost:5000/loginvalid', {email, password});
+      const response = await axios.post('https://ai-travelplanner-zmzg.onrender.com/loginvalid', {email, password});
       console.log(response.data);
       const username=response.data.username;
       localStorage.setItem("name",username)
