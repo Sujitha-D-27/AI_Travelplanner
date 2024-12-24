@@ -7,7 +7,6 @@ import { RouterProvider } from 'react-router'
 import CreateTrip from './create-trip'
 import { Toaster } from './components/ui/sonner'
 
-import Headers from './components/custom/Header'
 
 import Login from './components/custom/Login'
 import Signup from './components/custom/Signup'
@@ -51,7 +50,7 @@ createRoot(document.getElementById('root')).render(
     
     <RouterProvider router={router}>
    
-    <Headers/>
+    
      <Toaster /> 
      
     </RouterProvider>

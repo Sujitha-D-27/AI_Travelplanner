@@ -14,6 +14,10 @@ function Login() {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
+  const navtoSignup=()=>{
+    navigate("/signup")
+  }
+
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -136,9 +140,9 @@ function Login() {
             <div className="mt-5 text-center">
   <p>
     Don't have an account?{" "}
-    <Link to="/signup" className="text-blue-500">
+    <div onClick={navtoSignup} className="text-blue-500 cursor-pointer">
       Sign up
-    </Link>
+    </div>
   </p>
 </div>
           </div>
