@@ -46,7 +46,12 @@ export default function Profile() {
       try {
         if (email) {
           const response = await axios.get(`https://ai-travelplanner-p721.onrender.com/profile/${email}`);
-          setPlanHistory(response.data.wishlist || []);
+          const wishlistData = response.data.wishlist;
+          setPlanHistory(wishlistData[0].carttrip || []);
+          console.log("hihiih");
+          console.log(wishlistData[0].carttrip);
+  
+          
         } else {
           console.error("Email is not available in localStorage.");
         }
