@@ -45,7 +45,7 @@ export default function Profile() {
     const fetchWishlist = async () => {
       try {
         if (email) {
-          const response = await axios.get(`https://ai-travelplanner-p721.onrender.com/${email}`);
+          const response = await axios.get(`https://ai-travelplanner-p721.onrender.com/profile/${email}`);
           setPlanHistory(response.data.wishlist || []);
         } else {
           console.error("Email is not available in localStorage.");
