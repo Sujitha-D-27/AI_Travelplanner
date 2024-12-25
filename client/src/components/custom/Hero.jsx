@@ -181,8 +181,8 @@ export default function Hero() {
                     <Button
                       size="lg"
                       className="px-8 py-3 text-lg font-semibold bg-white text-indigo-600 hover:bg-gray-50"
-                    >
-                     Want a sneak peek? Watch the demo!
+                    ><a href="https://drive.google.com/file/d/1psuzt_DdVZwXlsceVaIDJe0ZaUATZcD_/view?usp=drivesdk">
+                     Want a sneak peek? Watch the demo!</a>
                     </Button>
                
               
