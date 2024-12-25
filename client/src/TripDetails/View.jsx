@@ -194,47 +194,62 @@ function View() {
               <span>Recommendations</span>
             </button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] border p-4 shadow-lg rounded-lg ">
+          <DialogContent className="sm:max-w-[500px] border p-4 shadow-lg rounded-lg">
   <DialogHeader>
     <DialogTitle>Travel Recommendations</DialogTitle>
   </DialogHeader>
   <div className="text-gray-700 grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div>
-      <h2 className="text-lg font-bold mb-2">Clothes</h2>
-      <ul className="list-disc list-inside">
-        {tripData.clothes?.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-    </div>
+    
+    {(() => {
+      const normalizedData = {
+        clothes: tripData.Clothes || tripData.clothes || [],
+        medicines: tripData.Medicines || tripData.medicines || [],
+        food: tripData.Food || tripData.food || [],
+        currency: tripData.Currency || tripData.currency || {},
+      };
 
-    <div>
-      <h2 className="text-lg font-bold mb-2">Medicines</h2>
-      <ul className="list-disc list-inside">
-        {tripData.medicines?.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-    </div>
+      return (
+        <>
+          <div>
+            <h2 className="text-lg font-bold mb-2">Clothes</h2>
+            <ul className="list-disc list-inside">
+              {normalizedData.clothes.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
 
-    <div>
-      <h2 className="text-lg font-bold mb-2">Food</h2>
-      <ul className="list-disc list-inside">
-        {tripData.food?.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-    </div>
+          <div>
+            <h2 className="text-lg font-bold mb-2">Medicines</h2>
+            <ul className="list-disc list-inside">
+              {normalizedData.medicines.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
 
-    <div>
-      <h2 className="text-lg font-bold mb-2">Currency</h2>
-      <ul className="list-disc list-inside">
-        <li>Type: {tripData.currency?.type}</li>
-        <li>Estimated Amount: {tripData.currency?.estimatedAmount}</li>
-      </ul>
-    </div>
+          <div>
+            <h2 className="text-lg font-bold mb-2">Food</h2>
+            <ul className="list-disc list-inside">
+              {normalizedData.food.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-bold mb-2">Currency</h2>
+            <ul className="list-disc list-inside">
+              <li>Type: {normalizedData.currency.type || "N/A"}</li>
+              <li>Estimated Amount: {normalizedData.currency.estimatedAmount || "N/A"}</li>
+            </ul>
+          </div>
+        </>
+      );
+    })()}
   </div>
 </DialogContent>
+
 
 
         </Dialog>

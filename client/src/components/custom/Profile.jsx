@@ -1,59 +1,51 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ClockIcon,MoreVerticalIcon,Ticket,Clock,Share2Icon,ArrowBigLeft } from "lucide-react";
+import { ClockIcon, MoreVerticalIcon, Ticket, Clock, Share2Icon, ArrowBigLeft } from "lucide-react";
 import axios from "axios";
-import { toast,ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { useNavigate } from "react-router-dom";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
- 
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-
-
+} from "@/components/ui/dropdown-menu";
 
 export default function Profile() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  
+  const searchParams = new URLSearchParams(location.search);
+  const name = searchParams.get("name");
+  const email = searchParams.get("email");
+
   const user = {
-    name: localStorage.getItem("name"),
-    email: localStorage.getItem("Email"),
+    name: name || localStorage.getItem("name"),
+    email: email || localStorage.getItem("Email"),
     avatar: localStorage.getItem("Photo"),
     role: "Traveler",
   };
 
   const [planHistory, setPlanHistory] = useState([]);
-  const [email, setEmail] = useState(null);
   const [filter, setFilter] = useState("all");
   const [filteredPlans, setFilteredPlans] = useState([]);
-  const [profileLink, setProfileLink] = useState('');
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("Email");
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
-  }, []);
+  const [profileLink, setProfileLink] = useState("");
 
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
-        if (email) {
-          const response = await axios.get(`https://ai-travelplanner-p721.onrender.com/profile/${email}`);
+        if (user.email) {
+          const response = await axios.get(`https://ai-travelplanner-p721.onrender.com/profile/${user.email}`);
           const wishlistData = response.data.wishlist;
           setPlanHistory(wishlistData[0].carttrip || []);
-          console.log("hihiih");
           console.log(wishlistData[0].carttrip);
-  
-          
         } else {
-          console.error("Email is not available in localStorage.");
+          console.error("Email is not available.");
         }
       } catch (error) {
         console.error("Error while getting profile page data:", error);
@@ -61,15 +53,11 @@ export default function Profile() {
     };
 
     fetchWishlist();
-  }, [email]);
+  }, [user.email]);
 
-  
   useEffect(() => {
-    const generateProfileLink = () => {
-      setProfileLink(`https://ai-travelplanner-p721.onrender.com/${email}`);
-    };
-    generateProfileLink();
-  }, [email]);
+    setProfileLink(`https://budgetquest.vercel.app//${user.email}/${user.name}`);
+  }, [user.email]);
 
   const logout = () => {
     toast.success(`${user.name} logged out successfully`);
@@ -94,7 +82,7 @@ export default function Profile() {
   const handleDelete = async (placeName) => {
     try {
       const response = await axios.delete("https://ai-travelplanner-p721.onrender.com/delete", {
-        data: { email: email, placeName: placeName },
+        data: { email: user.email, placeName },
       });
 
       if (response.status === 200) {
@@ -109,8 +97,8 @@ export default function Profile() {
   const handleComplete = async (placeName) => {
     try {
       const response = await axios.patch("https://ai-travelplanner-p721.onrender.com/complete", {
-        email: email,
-        placeName: placeName,
+        email: user.email,
+        placeName,
       });
 
       if (response.status === 200) {
@@ -125,10 +113,10 @@ export default function Profile() {
       console.error("Error while updating completion status:", error);
     }
   };
-  const back=()=>{
-    navigate('/');
-  }
 
+  const back = () => {
+    navigate("/");
+  };
 
   const handleShare = () => {
     if (navigator.share) {
@@ -140,7 +128,6 @@ export default function Profile() {
         .then(() => toast.success("Profile link shared!"))
         .catch((error) => toast.error("Error sharing the link: " + error));
     } else {
-     
       navigator.clipboard.writeText(profileLink);
       toast.success("Profile link copied to clipboard!");
     }

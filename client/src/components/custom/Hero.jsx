@@ -2,16 +2,34 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, DollarSign, MapPin, Plane, Users } from 'lucide-react';
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import world from '/world.gif';
 export default function Hero() {
   const [login, setLogin] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const[useremail,setUseremail]=useState();
+  const[username,setUsername]=useState();
+  const navigate=useNavigate();
+  
   useEffect(() => {
     const email = localStorage.getItem("Email");
+    setUseremail(email);
+    const name=localStorage.getItem("name");
+    console.log(name);
+    setUsername(name);
+
+  console.log(username);
     setLogin(!email);
+  
   }, []);
+  useEffect(() => {
+    console.log(username);
+  }, [username]);
+
+  const navtotoprofile=()=>{
+    
+    navigate(`/profile/${useremail}/${username}`);
+  }
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
@@ -30,9 +48,10 @@ export default function Hero() {
                 <Button>Signup/Login</Button>
               </Link>
             ) : (
-              <Link to={'/profile'}>
-                <Button>Profile</Button>
-              </Link>
+
+              <div onClick={navtotoprofile} className="cursor-pointer">
+                <Button >Profile</Button>
+              </div>
             )}
           </div>
           <button

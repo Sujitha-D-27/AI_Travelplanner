@@ -7,11 +7,11 @@ import { Clock, Ticket } from "lucide-react";
 export default function SharableProfile({ match }) {
   const [wishlist, setWishlist] = useState([]);
   const email = match.params.email;
-
+  const name=localStorage.getItem("name");
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://ai-travelplanner-p721.onrender.com/${email}`);
+        const response = await axios.get(`https://budgetquest.vercel.app/${email}/${name}`);
         setWishlist(response.data.wishlist || []);
       } catch (error) {
         console.error("Error fetching profile data:", error);

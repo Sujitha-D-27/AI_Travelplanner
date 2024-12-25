@@ -37,11 +37,11 @@ element:<App/>
   element:<View />
 },
 {
-  path:'/profile',
+  path:'/profile/:email?/:name?',
   element:<Profile/>
 },
 {
-  path: "/profile/:email",
+  path: "/profile/:email?/:name?",
   element:<SharableProfile/>
 }
 ])
