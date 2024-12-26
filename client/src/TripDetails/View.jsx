@@ -94,8 +94,11 @@ function View() {
 
   useEffect(() => {
     try {
+      console.log(localStorage.getItem("TripData"));
       const savedData = JSON.parse(localStorage.getItem("TripData"));
+      console.log(savedData);
       setTripData(savedData);
+     
       console.log("hotel",savedData.hotel)
       console.log("hosp",savedData.emergencyHub);
       
@@ -118,6 +121,8 @@ function View() {
       setTripData(null);
     }
   }, []);
+
+  console.log(tripData);
 
   if (!tripData || !tripData.days) {
     return <h2>No Trip Data Found</h2>;

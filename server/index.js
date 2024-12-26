@@ -33,7 +33,7 @@ mongoose.connect(process.env.MONGODB_URL)
 
 app.post('/gemini', async (req, res) => {
     const { query: location, days, budget: amount, people } = req.body;
-    const prompt = `
+    const prompt = `{
         
 Generate a travel plan for the following details with exact number of days:
   - Location: ${location}
@@ -85,7 +85,7 @@ Generate a travel plan for the following details with exact number of days:
      11.   -Currency:
         Recommend the type of currency required for the destination and the estimated amount needed based on the trip's budget.
   Ensure the response includes the JSON block properly formatted with necessary data and avoid giving  word as json ,"json three backticks" at starting and at ending  and don't include any comments inside the json the hotel and emergency hub should be at final for whole trip and dont add it in each day plan.
-`;
+}`;
 
     try {
         if (!model) {
