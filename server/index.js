@@ -71,18 +71,18 @@ Generate a travel plan for the following details with exact number of days:
 
         Here’s the refined prompt for your recommendation requirements:
 
-        Recommendations Details
+       
         
-        Clothes:
+   8.   - Clothes:
         Specify the type of clothes to be carried based on the weather conditions during the trip.
         
-        Medicines:
+    9.   - Medicines:
         Provide a list of general medicines to be carried, including recommendations based on the bestTimetoVisit and the prevailing weather conditions.
         
-        Food:
+     10.  - Food:
         Suggest the type of food suitable for consumption based on the tripName or the destination's cuisine.
         
-        Currency:
+     11.   -Currency:
         Recommend the type of currency required for the destination and the estimated amount needed based on the trip's budget.
   Ensure the response includes the JSON block properly formatted with necessary data and avoid giving "json three backticks" at starting and at ending and don't include any comments inside the json the hotel and emergency hub shpuld be at final for whole trip and dont add it in each day plan.
 `;

@@ -104,7 +104,7 @@ const navigate=useNavigate();
 
       console.log('API Response:', response.data);
       
-      localStorage.setItem("TripData", response.data);
+      localStorage.setItem("TripData",response.data);
       
       // console.log('Stored TripData in localStorage:', localStorage.getItem("TripData"));
 

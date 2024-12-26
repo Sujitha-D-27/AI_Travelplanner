@@ -16,7 +16,7 @@ import "leaflet/dist/leaflet.css";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { jsPDF } from "jspdf";
-// import { toast } from "react-hot-toast";
+
 import { ToastContainer, toast } from 'react-toastify';
 const UNSPLASH_API_KEY = "y9a0zjGlZAxJbelRiKSSyTZT92tmT97NBoVaUjOOrRk";
 const WEATHER_API_KEY = "61bab5475d7d76b31b3e803e48099a56";
