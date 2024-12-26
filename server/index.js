@@ -84,7 +84,7 @@ Generate a travel plan for the following details with exact number of days:
         
      11.   -Currency:
         Recommend the type of currency required for the destination and the estimated amount needed based on the trip's budget.
-  Ensure the response includes the JSON block properly formatted with necessary data and avoid giving  word as json ,"json three backticks" at starting and at ending  and don't include any comments inside the json the hotel and emergency hub should be at final for whole trip and dont add it in each day plan.
+ Ensure the output starts and ends without "json" or triple backticks and contains no extraneous formatting or comments.The hotel and emergency hub shpuld be at final for whole trip and dont add it in each day plan.
 }`;
 
     try {
