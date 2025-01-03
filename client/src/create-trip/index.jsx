@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -8,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from '@/components/ui/slider';
-import { setTravelPlan } from '@/store/Travelplanslice';
 import { useNavigate } from 'react-router-dom';
 
 const formSteps = [
@@ -20,7 +18,7 @@ const formSteps = [
 ];
 
 export default function CreateTrip() {
-  // const dispatch = useDispatch();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     
@@ -30,9 +28,9 @@ export default function CreateTrip() {
     travelerType: '', 
   });
  
-  const [query, setQuery] = useState(''); // User input for destination
+  const [query, setQuery] = useState(''); 
  
-  const [suggestions, setSuggestions] = useState([]); // Store suggestions
+  const [suggestions, setSuggestions] = useState([]); 
   const[loading,setLoading]=useState(false);
   const [error, setError] = useState('');
 const navigate=useNavigate();
@@ -62,14 +60,14 @@ const navigate=useNavigate();
   };
  
 
-  //  form's next button click
+ 
   const handleNext = () => {
     if (currentStep < formSteps.length - 1) {
       setCurrentStep((prev) => prev + 1);
     }
   };
 
-  //  form's back button 
+  
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
@@ -111,9 +109,9 @@ const navigate=useNavigate();
     
       
       
-      // dispatch(setTravelPlan(response.data));
+      
       navigate('/view');
-      setError(''); // Clear any previous errors
+      setError('');
     } catch (error) {
       console.error('Error generating travel plan:', error);
       setError('Failed to generate travel plan. Please try again.');
@@ -123,21 +121,21 @@ const navigate=useNavigate();
     }
   };
 
-  // Handle user input change for destination
+  
   const handleInputChange = (e) => {
     const userInput = e.target.value;
     setQuery(userInput);
-    fetchSuggestions(userInput); // Fetch suggestions based on input
+    fetchSuggestions(userInput); 
   };
 
-  // Handle suggestion selection
+
   const handleSuggestionSelect = (suggestion) => {
     setQuery(suggestion.description);
-    setSuggestions([]); // Clear suggestions after selection
-    updateFormData('destination', suggestion.description); // Update form data with selected suggestion
+    setSuggestions([]); 
+    updateFormData('destination', suggestion.description); 
   };
 
-  // Render the current step of the form
+
   const renderStep = () => {
     switch (formSteps[currentStep].id) {
      

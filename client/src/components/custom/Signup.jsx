@@ -72,7 +72,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation checks
+   
     if (!username || !email || !password) {
       setError('Please fill in all required fields');
       return;

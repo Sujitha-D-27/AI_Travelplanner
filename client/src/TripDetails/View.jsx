@@ -26,7 +26,7 @@ function View() {
   const [placeImages, setPlaceImages] = useState({});
   const [weatherData, setWeatherData] = useState({});
  
-  // Fetch images for places
+
   const fetchImage = async (placeName) => {
     try {
       const response = await axios.get(
@@ -41,7 +41,7 @@ function View() {
     }
   };
 
-  // Parse geo-coordinates from string
+
   const parseCoordinates = (geoString) => {
     const match = geoString.match(
       /([-+]?[0-9]*\.?[0-9]+)°?\s*([NS]),\s*([-+]?[0-9]*\.?[0-9]+)°?\s*([EW])/
@@ -53,7 +53,7 @@ function View() {
     return { lat, lng };
   };
 
-  // Fetch weather data for places
+ 
   const fetchWeather = async (lat, lon, placeName) => {
     try {
       const response = await axios.get(

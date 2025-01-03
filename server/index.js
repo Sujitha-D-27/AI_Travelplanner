@@ -294,12 +294,12 @@ app.get("/profile/:email", async (req, res) => {
 })
 
 app.get('/',(req,res)=>{
-  //function to check if backend is running in browser
+  
   res.json("Hii, backend is running");
 })
 
 
-// Start the server
+
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
