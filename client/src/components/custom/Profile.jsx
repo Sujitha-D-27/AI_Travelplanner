@@ -1,11 +1,11 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ClockIcon, MoreVerticalIcon, Ticket, Clock, Share2Icon, ArrowBigLeft } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { ArrowBigLeft, Clock, ClockIcon, MoreVerticalIcon, Share2Icon, Ticket } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import { Button } from "../ui/button";
 
 import {
